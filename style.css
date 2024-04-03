@@ -1,0 +1,19 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 100dvh;
+  background-color: hsl(240, 40%, 37%);
+  color: white;
+}
+
+.container {
+  position: relative;
+}
+
+.playfield {
+  border: 2px solid black;
+}

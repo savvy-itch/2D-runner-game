@@ -1,0 +1,18 @@
+1) Character:
+  + character walking animation
+  - chracter jumping (controls)
+  + idle animation
+  - death animation
+2) Game:
+  - game start/end/restart
+  - score count
+  - best result
+  - levels (speed)
+  - day/night change
+  - collision detection
+3) Background:
+  - moving background
+  - background objects
+  - obstacles
+
+|stand|-|left step|-|right step|-|jump|-
