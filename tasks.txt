@@ -13,6 +13,9 @@
   - collectables (?)
   - sound FX (?)
 3) Background:
-  ! obstacles
+  ! obstacles:
+    + display a static obstacle on the screen;
+    + display a moving obstacle on the screen;
+    - randomize obstacles
   - moving background
   - background objects
