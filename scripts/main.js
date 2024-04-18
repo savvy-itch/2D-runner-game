@@ -6,13 +6,14 @@ import {
   offsetPerFrame,
   obstacles,
   maxObstaclesPerScreen,
-  minDistanceBetweenObstacles,
+  canvasWidth,
+  canvasHeight,
 } from './config.js';
-import {getRandom} from './helpers.js';
+import {createSingleObstacle} from './obstacles.js'
 
 const canvas = document.querySelector('.playfield');
-const width = canvas.width = 700;
-const height = canvas.height = 400;
+const width = canvas.width = canvasWidth;
+const height = canvas.height = canvasHeight;
 const ctx = canvas.getContext('2d');
 
 ctx.fillStyle = 'beige';
@@ -49,7 +50,6 @@ document.addEventListener('keydown', (e) => {
     isJumpPressed = true;
   }
 });
-
 
 document.addEventListener('DOMContentLoaded', () => {
   let loadedImgs = 0;
@@ -161,63 +161,24 @@ function slowFramerate(velocity, numOfSprites) {
 
 // ============ Obstacles =================
 
-class Obstacle {
-  constructor(isPassed, isVisible, image, x, y, sizeX, sizeY, vel) {
-    this.isPassed = isPassed;
-    this.isVisible = isVisible;
-    this.image = image;
-    this.x = x;
-    this.y = y;
-    this.sizeX = sizeX;
-    this.sizeY = sizeY;
-    this.vel = vel;
-  }
-
-  drawRock() {
-    ctx.drawImage(
-      this.image, 
-      0, // top-left corner of the slice to cut out (X)
-      0, // top-left corner of the slice to cut out (Y)
-      this.sizeX, // the size of the slice to cut out (X)
-      this.sizeY, // the size of the slice to cut out (Y)
-      this.x, // top-left corner of canvas box into which to draw the slice (X)
-      this.y, // top-left corner of canvas box into which to draw the slice (Y)
-      this.sizeX, // the size of the image on the canvas (X)
-      this.sizeY // the size of the image on the canvas (Y)
-    );
-  }
-
-  updateRock() {
-    this.x -= this.vel;
-
-    // if the obstacle reached the right edge of the screen, start drawing it
-    if (this.x <= width && !this.isVisible) {
-      this.isVisible = true;
-    } else if (this.x <= (-this.sizeX)) {
-      // when an obstacle moves off-screen
-      this.isPassed = true;
-      this.isVisible = false;
-    }
-  }
-}
-
-// only draw visible obstacles
+let obstacleArray = Array.from({length: maxObstaclesPerScreen});
+let obstacleVelocity = 5;
 
 function loop() {
   ctx.fillRect(0, 0, width, height);
 
   for (let i = 0; i < obstacleArray.length; i++) {
     if (obstacleArray[i].isVisible) {
-      obstacleArray[i].drawRock();
+      obstacleArray[i].drawObstacle(ctx);
     }
 
     // only start moving obstacles once the game has started
     if (startGame) {
-      obstacleArray[i].updateRock();
+      obstacleArray[i].updateObstacle();
       // if a character passed an obstacle
       if (obstacleArray[i].isPassed) {
         // generate new obstacle
-        obstacleArray[i] = createSingleObstacle();
+        obstacleArray[i] = createSingleObstacle(obstacleArray, obstacleVelocity);
       }
     }
   }
@@ -233,40 +194,8 @@ function loop() {
   loopId = window.requestAnimationFrame(loop);
 }
 
-let obstacleArray = Array.from({length: maxObstaclesPerScreen});
-let obstacleVelocity = 5;
-
 document.addEventListener('DOMContentLoaded', () => {
   for (let i = 0; i < maxObstaclesPerScreen; i++) {
-    obstacleArray[i] = createSingleObstacle();
+    obstacleArray[i] = createSingleObstacle(obstacleArray, obstacleVelocity);
   }
 });
-
-
-function createSingleObstacle() {
-  const obstacleObj = {};
-  const obstacleImg = new Image();
-  const idx = getRandom(0, obstacles.length - 1);
-  obstacleImg.src = obstacles[idx].imgSrc;
-  
-  // Use the farthest obstacle x as minimum x for the new obstacle
-  let farthestObstacle = obstacleArray[0] ? obstacleArray[0].x : width;
-  obstacleArray.forEach(item => {
-    if (item && (item.x > (farthestObstacle + spriteX + minDistanceBetweenObstacles))) {
-      farthestObstacle = item.x + item.sizeX;
-    }
-  });
-  const minX = spriteX + minDistanceBetweenObstacles + (farthestObstacle ? farthestObstacle : width);
-  let maxX = (width * 2.5) - minDistanceBetweenObstacles;
-  if (minX > maxX) {
-    maxX += farthestObstacle;
-  }
-
-  const distance = getRandom(minX, maxX);
-  obstacleObj.isPassed = false;
-  obstacleObj.isVisible = false;
-  obstacleObj.x = distance;
-  obstacleObj.y = height - obstacles[idx].sizeY;
-  const obstacle = new Obstacle(obstacleObj.isPassed, obstacleObj.isVisible, obstacleImg, obstacleObj.x, obstacleObj.y, obstacles[idx].sizeX, obstacles[idx].sizeY, obstacleVelocity);
-  return obstacle;
-}

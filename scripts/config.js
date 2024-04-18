@@ -1,3 +1,5 @@
+export const canvasWidth = 700;
+export const canvasHeight = 400;
 export const spriteX = 128;
 export const spriteY = 128;
 export const idleVelocity = 13;
