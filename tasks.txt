@@ -1,6 +1,6 @@
 1) Character:
   + character walking animation
-  + chracter jumping (controls)
+  + character jumping (controls)
   + idle animation
   - death animation
 2) Game:
@@ -16,6 +16,7 @@
   ! obstacles:
     + display a static obstacle on the screen;
     + display a moving obstacle on the screen;
-    - randomize obstacles
+    + randomize obstacles
   - moving background
   - background objects
+4) separate code into files

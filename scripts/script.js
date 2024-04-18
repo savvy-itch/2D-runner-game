@@ -7,12 +7,11 @@ import {
   obstacles,
   maxObstaclesPerScreen,
   minDistanceBetweenObstacles,
-  chanceOfGroupedObstacles
 } from './config.js';
 import {getRandom} from './helpers.js';
 
 const canvas = document.querySelector('.playfield');
-const width = canvas.width = 600;
+const width = canvas.width = 700;
 const height = canvas.height = 400;
 const ctx = canvas.getContext('2d');
 
@@ -30,7 +29,7 @@ let velocity = 5;
 let loopId;
 
 const imageRun = new Image();
-imageRun.src = "../images/Run.png";
+imageRun.src = "../images/character/Run.png";
 document.addEventListener('keyup', (e) => {
   if (e.key === 'Enter' && !startGame) {
     startGame = true;
@@ -39,10 +38,10 @@ document.addEventListener('keyup', (e) => {
 });
 
 const imageIdle = new Image();
-imageIdle.src = "../images/Idle.png";
+imageIdle.src = "../images/character/Idle.png";
 
 const imageJump = new Image();
-imageJump.src = "../images/Jump.png";
+imageJump.src = "../images/character/Jump.png";
 document.addEventListener('keydown', (e) => {
   if ((e.code === 'Space' || e.code === 'ArrowUp') && startGame && !isJumpPressed) {
     sprite = 0;
@@ -51,11 +50,20 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-const imageRock = new Image();
-imageRock.src = "../images/cave_rock5.png";
-imageRock.onload = () => {
-  loop();
-};
+
+document.addEventListener('DOMContentLoaded', () => {
+  let loadedImgs = 0;
+  for (let i = 0; i < obstacles.length; i++) {
+    const img = new Image();
+    img.src = obstacles[i].imgSrc;
+    img.onload = () => {
+      loadedImgs++;
+      if (loadedImgs === obstacles.length) {
+        loop();
+      }
+    }
+  }
+});
 
 document.addEventListener('keyup', (e) => {
   if (e.code === 'Escape') {
@@ -108,9 +116,6 @@ function drawRun() {
 let posY = 0;
 
 function drawJump() {
-  // if (sprite === 0) console.log('drawJump');
-
-  // ctx.fillRect(-(width / 2), -(height / 2), width, height);
   ctx.drawImage(
     imageJump,
     sprite * spriteX, // top-left corner of the slice to cut out (X)
@@ -131,8 +136,6 @@ function drawJump() {
   } else {
     posY = (jumpSprites - sprite) * offsetPerFrame;
   }
-
-  // console.log(sprite, posY, height - posY);
 
   frame++;
   
@@ -159,7 +162,9 @@ function slowFramerate(velocity, numOfSprites) {
 // ============ Obstacles =================
 
 class Obstacle {
-  constructor(image, x, y, sizeX, sizeY, vel) {
+  constructor(isPassed, isVisible, image, x, y, sizeX, sizeY, vel) {
+    this.isPassed = isPassed;
+    this.isVisible = isVisible;
     this.image = image;
     this.x = x;
     this.y = y;
@@ -185,29 +190,34 @@ class Obstacle {
   updateRock() {
     this.x -= this.vel;
 
-    // when an obstacle moved off-screen
-    if (this.x <= (0 - this.sizeX)) {
-      return true;
-      // obstacleArray.shift();
-      // createObstacles();
+    // if the obstacle reached the right edge of the screen, start drawing it
+    if (this.x <= width && !this.isVisible) {
+      this.isVisible = true;
+    } else if (this.x <= (-this.sizeX)) {
+      // when an obstacle moves off-screen
+      this.isPassed = true;
+      this.isVisible = false;
     }
-
-    return false;
-  
-    // this.x -= this.vel;
   }
 }
+
+// only draw visible obstacles
 
 function loop() {
   ctx.fillRect(0, 0, width, height);
 
   for (let i = 0; i < obstacleArray.length; i++) {
-    obstacleArray[i].drawRock();
+    if (obstacleArray[i].isVisible) {
+      obstacleArray[i].drawRock();
+    }
 
-    if (isRunning || isJumpPressed) {
-      if (obstacleArray[i].updateRock()) {
-        obstacleArray.splice(i, 1);
-        i--;
+    // only start moving obstacles once the game has started
+    if (startGame) {
+      obstacleArray[i].updateRock();
+      // if a character passed an obstacle
+      if (obstacleArray[i].isPassed) {
+        // generate new obstacle
+        obstacleArray[i] = createSingleObstacle();
       }
     }
   }
@@ -223,39 +233,40 @@ function loop() {
   loopId = window.requestAnimationFrame(loop);
 }
 
-let obstacleArray = [];
+let obstacleArray = Array.from({length: maxObstaclesPerScreen});
 let obstacleVelocity = 5;
 
-document.addEventListener('DOMContentLoaded', createObstacles);
-
-function createObstacles() {
-  obstacleArray = [];
-  let obstacleAmount = getRandom(0, maxObstaclesPerScreen);
-
-  for (let i = 0; i < obstacleAmount; i++) {
-
-    const obstacleObj = {};
-    const imageRock = new Image();
-    const idx = getRandom(0, obstacles.length - 1);
-    imageRock.src = obstacles[idx].imgSrc;
-    obstacleObj.x = width + getRandom(minDistanceBetweenObstacles, width);
-    obstacleObj.y = height - obstacles[idx].sizeY;
-    const obstacle = new Obstacle(imageRock, obstacleObj.x, obstacleObj.y, obstacles[idx].sizeX, obstacles[idx].sizeY, obstacleVelocity);
-    obstacleArray.push(obstacle);
+document.addEventListener('DOMContentLoaded', () => {
+  for (let i = 0; i < maxObstaclesPerScreen; i++) {
+    obstacleArray[i] = createSingleObstacle();
   }
-  console.log(obstacleAmount, obstacleArray);
+});
+
+
+function createSingleObstacle() {
+  const obstacleObj = {};
+  const obstacleImg = new Image();
+  const idx = getRandom(0, obstacles.length - 1);
+  obstacleImg.src = obstacles[idx].imgSrc;
+  
+  // Use the farthest obstacle x as minimum x for the new obstacle
+  let farthestObstacle = obstacleArray[0] ? obstacleArray[0].x : width;
+  obstacleArray.forEach(item => {
+    if (item && (item.x > (farthestObstacle + spriteX + minDistanceBetweenObstacles))) {
+      farthestObstacle = item.x + item.sizeX;
+    }
+  });
+  const minX = spriteX + minDistanceBetweenObstacles + (farthestObstacle ? farthestObstacle : width);
+  let maxX = (width * 2.5) - minDistanceBetweenObstacles;
+  if (minX > maxX) {
+    maxX += farthestObstacle;
+  }
+
+  const distance = getRandom(minX, maxX);
+  obstacleObj.isPassed = false;
+  obstacleObj.isVisible = false;
+  obstacleObj.x = distance;
+  obstacleObj.y = height - obstacles[idx].sizeY;
+  const obstacle = new Obstacle(obstacleObj.isPassed, obstacleObj.isVisible, obstacleImg, obstacleObj.x, obstacleObj.y, obstacles[idx].sizeX, obstacles[idx].sizeY, obstacleVelocity);
+  return obstacle;
 }
-
-
-// for (const item of obstacles) {
-//   const imageRock = new Image();
-//   imageRock.src = item.imgSrc;
-
-//   const obstacle = new Obstacle(imageRock, width + item.sizeX, 0, item.sizeX, item.sizeY, obstacleVelocity);
-//   obstacleArray.push(obstacle);
-// }
-
-// randomize position of an obstacle with regards to the distance to the next obstacle
-// add grouped obstacles probability
-
-// const obstacle = new Obstacle(imageRock, width + 29, 0, 29, 24, 5);
