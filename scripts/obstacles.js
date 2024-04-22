@@ -31,10 +31,12 @@ export class Obstacle {
       this.sizeX, // the size of the image on the canvas (X)
       this.sizeY // the size of the image on the canvas (Y)
     );
+    ctx.strokeRect(this.x, this.y, this.sizeX, this.sizeY);
   }
 
-  updateObstacle() {
+  updateObstacle(ctx) {
     this.x -= this.vel;
+    ctx.strokeRect(this.x, this.y, this.sizeX, this.sizeY);
 
     // if the obstacle reached the right edge of the screen, start drawing it
     if (this.x <= canvasWidth && !this.isVisible) {

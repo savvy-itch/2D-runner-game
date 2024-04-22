@@ -2,13 +2,25 @@ export const canvasWidth = 700;
 export const canvasHeight = 400;
 export const spriteX = 128;
 export const spriteY = 128;
+export const spriteXNoPadding = 54;
+export const spriteYNoPadding = 75;
+export const spriteDeadXNoPadding = 76;
+export const spriteXPadding = (spriteX - spriteXNoPadding) / 2;
+export const spriteDeadXPadding = (spriteX - spriteDeadXNoPadding) / 2;
 export const idleVelocity = 13;
+export const deadVel = 10;
+export const runSprites = 7;
 export const jumpSprites = 7;
-export const offsetPerFrame = spriteY / Math.ceil(jumpSprites / 2);
+export const deadSprites = 4;
+// export const offsetPerFrame = spriteY / Math.ceil(jumpSprites / 2);
+export const offsetPerFrame = 60;
 export const maxObstaclesPerScreen = 3;
 export const minDistanceBetweenObstacles = 50;
 export const chanceOfGroupedObstacles = 10;
 export const noObstaclesChance = .3; // 0 - 0.9
+export const scoreCharsAmount = 5;
+export const initScoreVel = 20;
+export const maxLevel = 5;
 export const obstacles = [
   {
     imgSrc: "../images/obstacles/cave_rock4.png",

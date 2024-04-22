@@ -2,13 +2,17 @@
   + character walking animation
   + character jumping (controls)
   + idle animation
-  - death animation
+  ! death animation:
+    - cut sprites properly
 2) Game:
-  - collision detection
+  + collision detection
   - game start/end/restart
-  - levels (speed)
-  - score count
-  - best result
+  ! levels (speed)
+    + level speed
+    - change environment
+  + score count
+    + handle max score 
+  ! best result
   - day/night change
   - collectables (?)
   - sound FX (?)
@@ -19,4 +23,15 @@
     + randomize obstacles
   - moving background
   - background objects
-4) separate code into files
++ separate code into files
+4) Styling:
+  - fonts
+  - colors
+  - ui animations
+5) add comments
+6) Testing
+
+Bugs:
+- pressing Enter after the game end moves the obstacles and starts the game
+
+5 levels
