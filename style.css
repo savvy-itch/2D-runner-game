@@ -84,3 +84,29 @@ body {
   filter: brightness(.6);
   transition: filter var(--transition);
 }
+
+.start-btn {
+  display: none;
+}
+
+.show-start-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10%;
+  background-color: cornflowerblue;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+}
+
+.start-btn:hover {
+  cursor: pointer;
+}
+
+.start-btn img {
+  max-width: 100%;
+  color: white;
+}

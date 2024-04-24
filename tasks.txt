@@ -2,22 +2,25 @@
   + character walking animation
   + character jumping (controls)
   + idle animation
-  ! death animation:
-    - cut sprites properly
+  + death animation:
+    + cut sprites properly
 2) Game:
   + collision detection
-  - game start/end/restart
+  ! game start/end/restart
+    + start button
+    - game over menu
+    - new record message
   ! levels (speed)
     + level speed
     - change environment
   + score count
     + handle max score 
-  ! best result
-  - day/night change
-  - collectables (?)
-  - sound FX (?)
+  + best result
+  ? day/night change
+  ? collectables
+  ? sound FX
 3) Background:
-  ! obstacles:
+  + obstacles:
     + display a static obstacle on the screen;
     + display a moving obstacle on the screen;
     + randomize obstacles
@@ -28,8 +31,11 @@
   - fonts
   - colors
   - ui animations
+    - animation when the best record gets beaten
 5) add comments
 6) Testing
+
+11/21
 
 Bugs:
 - pressing Enter after the game end moves the obstacles and starts the game

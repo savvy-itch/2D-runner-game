@@ -19,11 +19,14 @@ import {
   spriteDeadXPadding,
   spriteDeadXNoPadding
 } from './config.js';
+import { displayScore } from './helpers.js';
 import {createSingleObstacle} from './obstacles.js'
 
 const canvas = document.querySelector('.playfield');
 const scoreSpan = document.getElementById('score');
+const bestScoreSpan = document.getElementById('best');
 const dialogWindow = document.getElementById('dialog');
+const startBtn = document.getElementById('start-btn');
 const width = canvas.width = canvasWidth;
 const height = canvas.height = canvasHeight;
 const ctx = canvas.getContext('2d');
@@ -42,18 +45,14 @@ let sprite = 0;
 let frame = 0;
 let velocity = 5;
 let loopId;
+let deadAnimationplayed = false;
 let score = 0;
 
 const imageRun = new Image();
 imageRun.src = "../images/character/Run.png";
 document.addEventListener('keyup', (e) => {
   if (e.key === 'Enter' && !startGame) {
-    startGame = true;
-    isRunning = true;
-    isIdle = false;
-    isDead = false;
-    score = 0;
-    displayScore();
+    startGameFn();
   }
 });
 
@@ -69,6 +68,21 @@ document.addEventListener('keydown', (e) => {
     isJumpPressed = true;
   }
 });
+
+startBtn.addEventListener('click', () => {
+  startGameFn();
+})
+
+function startGameFn() {
+  startBtn.classList.remove('show-start-btn');
+  startGame = true;
+  isRunning = true;
+  isIdle = false;
+  isDead = false;
+  score = 0;
+  displayScore(scoreSpan, score);
+  updateBestResult();
+}
 
 const imageDead = new Image();
 imageDead.src = "../images/character/Dead.png";
@@ -96,12 +110,15 @@ document.addEventListener('keyup', (e) => {
 });
 
 function endGame() {
+  startGame = false;
   window.cancelAnimationFrame(loopId);
   isRunning = false;
   isJumpPressed = false;
   isIdle = false;
-  startGame = false;
-  // displayDialog();
+  updateBestResult();
+  setTimeout(() => {
+    displayDialog();
+  }, 300);
 }
 
 function displayDialog() {
@@ -186,26 +203,24 @@ class Hero {
       isJumpPressed = false;
       isRunning = true;
     }
-    // console.log(this.x, this.y);
   }
 
-  // 76px
   drawDead() {
     ctx.drawImage(
       imageDead,
-      (sprite * spriteX) + spriteDeadXPadding, // top-left corner of the slice to cut out (X)
+      ((sprite > deadSprites ? deadSprites : sprite) * spriteX) + spriteDeadXPadding, // top-left corner of the slice to cut out (X)
       spriteY - spriteYNoPadding, // top-left corner of the slice to cut out (Y)
       spriteDeadXNoPadding, // the size of the slice to cut out (X)
       spriteYNoPadding, // the size of the slice to cut out (Y)
-      this.x, // top-left corner of canvas box into which to draw the slice (X)
+      0, // top-left corner of canvas box into which to draw the slice (X)
       this.y - posY, // top-left corner of canvas box into which to draw the slice (Y)
       spriteDeadXNoPadding, // the size of the image on the canvas (X)
       spriteYNoPadding // the size of the image on the canvas (Y)
     );
-    ctx.strokeRect(this.x, this.y - posY, spriteDeadXNoPadding, spriteYNoPadding);
+    ctx.strokeRect(0, this.y - posY, spriteDeadXNoPadding, spriteYNoPadding);
 
-    if (sprite === deadSprites) {
-      endGame();
+    if (sprite >= deadSprites) {
+      deadAnimationplayed = true;
     } else {
       slowFramerate(velocity, deadSprites);
       frame++;
@@ -228,7 +243,7 @@ class Hero {
   }
 }
 
-const hero = new Hero(20, height - spriteYNoPadding);
+const hero = new Hero(25, height - spriteYNoPadding);
 
 let posY = 0;
 
@@ -250,10 +265,6 @@ let scoreVel = 20;
 let level = 1;
 const maxScore = Number(String('').padStart(scoreCharsAmount, '9'));
 
-function displayScore() {
-  scoreSpan.textContent = String(score).padStart(scoreCharsAmount, '0');
-}
-
 function updateScore() {
   if (score === maxScore) {
     endGame();``
@@ -262,7 +273,7 @@ function updateScore() {
 
   if (scoreFreq === scoreVel) {
     score++;
-    displayScore();
+    displayScore(scoreSpan, score);
     scoreFreq = 0;
 
     if (score > 0 && (score % 100 === 0) && level < maxLevel) {
@@ -271,6 +282,17 @@ function updateScore() {
       updateObstacleVel();
       scoreVel = initScoreVel * ((100 - (level * 10)) / 100);
     }
+  }
+}
+
+function updateBestResult() {
+  const currentBest = sessionStorage.getItem("best-score");
+  if (!currentBest || (score > currentBest)) {
+    sessionStorage.removeItem("best-score");
+    sessionStorage.setItem("best-score", score);
+    displayScore(bestScoreSpan, score);
+  } else {
+    displayScore(bestScoreSpan, currentBest);
   }
 }
 
@@ -288,15 +310,14 @@ function loop() {
       obstacleArray[i].drawObstacle(ctx);
     }
 
-    // only start moving obstacles once the game has started
+    // only start moving obstacles when the game is on
     if (startGame && !isDead) {
       obstacleArray[i].updateObstacle(ctx);
       updateScore();
       if (hero.detectCollision(obstacleArray[i].x, obstacleArray[i].y)) {
         isDead = true;
-        isRunning = false;
-        isJumpPressed = false;
-        isIdle = false;
+        sprite = 0;
+        frame = 0;
       }
       // if a character passed an obstacle
       if (obstacleArray[i].isPassed) {
@@ -306,22 +327,26 @@ function loop() {
     }
   }
 
-  if (isRunning) {
+  if (isDead && startGame && !deadAnimationplayed) {
+    hero.drawDead();
+  } else if (isRunning) {
     hero.drawRun();
   } else if (isJumpPressed) {
     hero.drawJump();
   } else if (isIdle) {
     hero.drawIdle();
-  } else if (isDead) {
-    hero.drawDead();
   }
 
   loopId = window.requestAnimationFrame(loop);
+  if (deadAnimationplayed) {
+    endGame();
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   for (let i = 0; i < maxObstaclesPerScreen; i++) {
     obstacleArray[i] = createSingleObstacle(obstacleArray, obstacleVelocity);
   }
-  displayScore();
+  displayScore(scoreSpan, score);
+  updateBestResult();
 });
