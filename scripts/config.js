@@ -112,4 +112,31 @@ export const obstacles = [
     sizeX: 27,
     sizeY: 70,
   },
-]
+];
+export const menuHtml = {
+  gameBeaten: `
+    <p>Congratulations!</p>
+    <p>You beat the game!</p>
+    <p>Now go outside and touch grass)</p>
+  `,
+  gameOver: `
+    <p>Game Over</p>
+    <div class="dialog-results-container">
+      <div class="best-record-wrapper">
+        <p>Best score:</p>
+        <p id="dialog-best-record" class="menu-best">0000</p>
+      </div>
+      <div>
+        <p>Your score:</p>
+        <p id="dialog-score">00000</p>
+      </div>
+    </div>
+    <button id="restart-btn">
+      <img src="./images/restart.svg" alt="restart">
+    </button>
+  `,
+}
+
+// game over
+// game over w/ new record
+// game beaten

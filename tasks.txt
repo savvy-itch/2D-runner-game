@@ -8,8 +8,9 @@
   + collision detection
   ! game start/end/restart
     + start button
-    - game over menu
-    - new record message
+    + game over menu
+    + new record message
+    + game restart
   ! levels (speed)
     + level speed
     - change environment
@@ -32,12 +33,11 @@
   - colors
   - ui animations
     - animation when the best record gets beaten
+  - responsiveness
 5) add comments
 6) Testing
+7) diplay controls tip at the start of the game for the first time
 
-11/21
-
-Bugs:
-- pressing Enter after the game end moves the obstacles and starts the game
+14/24
 
 5 levels

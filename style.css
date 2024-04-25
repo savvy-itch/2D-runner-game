@@ -85,6 +85,12 @@ body {
   transition: filter var(--transition);
 }
 
+.dialog-results-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
 .start-btn {
   display: none;
 }

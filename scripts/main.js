@@ -20,6 +20,7 @@ import {
   spriteDeadXNoPadding
 } from './config.js';
 import { displayScore } from './helpers.js';
+import { populateMenu } from './menu.js';
 import {createSingleObstacle} from './obstacles.js'
 
 const canvas = document.querySelector('.playfield');
@@ -47,11 +48,14 @@ let velocity = 5;
 let loopId;
 let deadAnimationplayed = false;
 let score = 0;
+let bestScore = 0;
+let isNewBest = false;
+let isRestart = false;
 
 const imageRun = new Image();
 imageRun.src = "../images/character/Run.png";
 document.addEventListener('keyup', (e) => {
-  if (e.key === 'Enter' && !startGame) {
+  if (e.key === 'Enter' && !startGame && !isRestart) {
     startGameFn();
   }
 });
@@ -80,8 +84,35 @@ function startGameFn() {
   isIdle = false;
   isDead = false;
   score = 0;
+  isNewBest = false;
   displayScore(scoreSpan, score);
   updateBestResult();
+}
+
+function restartGame() {
+  obstacleArray = Array.from({length: maxObstaclesPerScreen});
+  obstacleVelocity = 6;
+  scoreFreq = 0;
+  scoreVel = 20;
+  level = 1;
+  sprite = 0;
+  frame = 0;
+  
+  for (let i = 0; i < maxObstaclesPerScreen; i++) {
+    obstacleArray[i] = createSingleObstacle(obstacleArray, obstacleVelocity);
+  }
+
+  hideDialog();
+  startGame = true;
+  isRunning = true;
+  isIdle = false;
+  isDead = false;
+  score = 0;
+  isNewBest = false;
+  deadAnimationplayed = false;
+  displayScore(scoreSpan, score);
+  updateBestResult();
+  loop();
 }
 
 const imageDead = new Image();
@@ -105,11 +136,11 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('keyup', (e) => {
   if (e.code === 'Escape') {
     console.log('abort');
-    endGame();
+    endGame('gameOver');
   }
 });
 
-function endGame() {
+function endGame(type) {
   startGame = false;
   window.cancelAnimationFrame(loopId);
   isRunning = false;
@@ -117,12 +148,27 @@ function endGame() {
   isIdle = false;
   updateBestResult();
   setTimeout(() => {
+    populateMenu(type, bestScore, score, isNewBest);
     displayDialog();
+    isRestart = true;
+    const restartBtn = document.getElementById('restart-btn');
+    restartBtn.addEventListener('click', () => {
+      restartGame();
+    });
+    document.addEventListener('keyup', (e) => {
+      if ((e.code === 'Space' || e.key === 'Enter') && !startGame) {
+        restartGame();
+      }
+    });
   }, 300);
 }
 
 function displayDialog() {
   dialogWindow.classList.add('show-dialog');
+}
+
+function hideDialog() {
+  dialogWindow.classList.remove('show-dialog');
 }
 
 // =========== Character ===============
@@ -237,7 +283,6 @@ class Hero {
       //   obstacleX <= (this.x + spriteXNoPadding)=${obstacleX}, ${this.x + spriteXNoPadding}, 
       //   bstacleY <= (this.y - posY + spriteYNoPadding)=${obstacleY}, ${this.y - posY + spriteYNoPadding}`
       // );
-      // endGame();
     }
     return false;
   }
@@ -267,7 +312,7 @@ const maxScore = Number(String('').padStart(scoreCharsAmount, '9'));
 
 function updateScore() {
   if (score === maxScore) {
-    endGame();``
+    endGame('gameBeaten');
   }
   scoreFreq++;
 
@@ -288,11 +333,14 @@ function updateScore() {
 function updateBestResult() {
   const currentBest = sessionStorage.getItem("best-score");
   if (!currentBest || (score > currentBest)) {
+    bestScore = score;
     sessionStorage.removeItem("best-score");
-    sessionStorage.setItem("best-score", score);
-    displayScore(bestScoreSpan, score);
+    sessionStorage.setItem("best-score", bestScore);
+    displayScore(bestScoreSpan, bestScore);
+    isNewBest = true;
   } else {
-    displayScore(bestScoreSpan, currentBest);
+    bestScore = currentBest;
+    displayScore(bestScoreSpan, bestScore);
   }
 }
 
@@ -339,7 +387,7 @@ function loop() {
 
   loopId = window.requestAnimationFrame(loop);
   if (deadAnimationplayed) {
-    endGame();
+    endGame('gameOver');
   }
 }
 
