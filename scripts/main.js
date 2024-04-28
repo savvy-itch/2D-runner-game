@@ -1,3 +1,4 @@
+import { Background } from './background.js';
 import {
   spriteX, 
   spriteY, 
@@ -17,7 +18,9 @@ import {
   deadSprites,
   runSprites,
   spriteDeadXPadding,
-  spriteDeadXNoPadding
+  spriteDeadXNoPadding,
+  initialBackgroundVel,
+  initialForegroundVel
 } from './config.js';
 import { displayScore } from './helpers.js';
 import { populateMenu } from './menu.js';
@@ -51,6 +54,15 @@ let score = 0;
 let bestScore = 0;
 let isNewBest = false;
 let isRestart = false;
+
+const skyImg = new Image();
+skyImg.src = "../images/env/1/1.png";
+const skyObjectsImg = new Image();
+skyObjectsImg.src = "../images/env/1/4.png";
+const groundImg = new Image();
+groundImg.src = "../images/env/1/2.png";
+const groundObjectsImg = new Image();
+groundObjectsImg.src = "../images/env/1/3.png";
 
 const imageRun = new Image();
 imageRun.src = "../images/character/Run.png";
@@ -90,6 +102,12 @@ function startGameFn() {
 }
 
 function restartGame() {
+  for (let i = 0; i < bgArray.length; i++) {
+    bgArray[i].backgroundX = i * width;
+    bgArray[i].foregroundX = i * width;
+  }
+  backgroundVel = initialBackgroundVel;
+  foregroundVel = initialForegroundVel;
   obstacleArray = Array.from({length: maxObstaclesPerScreen});
   obstacleVelocity = 6;
   scoreFreq = 0;
@@ -191,7 +209,7 @@ class Hero {
       spriteXNoPadding, // the size of the image on the canvas (X)
       spriteYNoPadding // the size of the image on the canvas (Y)
     );
-    ctx.strokeRect(this.x, this.y, spriteXNoPadding, spriteYNoPadding);
+    // ctx.strokeRect(this.x, this.y, spriteXNoPadding, spriteYNoPadding);
 
   slowFramerate(idleVelocity, 4);
 
@@ -210,7 +228,7 @@ class Hero {
       spriteXNoPadding, // the size of the image on the canvas (X)
       spriteYNoPadding // the size of the image on the canvas (Y)
     );
-    ctx.strokeRect(this.x, this.y, spriteXNoPadding, spriteYNoPadding);
+    // ctx.strokeRect(this.x, this.y, spriteXNoPadding, spriteYNoPadding);
   
     slowFramerate(velocity, runSprites);
   
@@ -229,7 +247,7 @@ class Hero {
       spriteXNoPadding, // the size of the image on the canvas (X)
       spriteYNoPadding // the size of the image on the canvas (Y)
     );
-    ctx.strokeRect(this.x, this.y - posY, spriteXNoPadding, spriteYNoPadding);
+    // ctx.strokeRect(this.x, this.y - posY, spriteXNoPadding, spriteYNoPadding);
     
     slowFramerate(4, jumpSprites);
   
@@ -263,7 +281,7 @@ class Hero {
       spriteDeadXNoPadding, // the size of the image on the canvas (X)
       spriteYNoPadding // the size of the image on the canvas (Y)
     );
-    ctx.strokeRect(0, this.y - posY, spriteDeadXNoPadding, spriteYNoPadding);
+    // ctx.strokeRect(0, this.y - posY, spriteDeadXNoPadding, spriteYNoPadding);
 
     if (sprite >= deadSprites) {
       deadAnimationplayed = true;
@@ -278,11 +296,6 @@ class Hero {
       && obstacleX >= this.x
       && obstacleY <= (this.y - posY + spriteYNoPadding)) {
         return true;
-      // console.log(
-      //   `collision detected: 
-      //   obstacleX <= (this.x + spriteXNoPadding)=${obstacleX}, ${this.x + spriteXNoPadding}, 
-      //   bstacleY <= (this.y - posY + spriteYNoPadding)=${obstacleY}, ${this.y - posY + spriteYNoPadding}`
-      // );
     }
     return false;
   }
@@ -324,6 +337,9 @@ function updateScore() {
     if (score > 0 && (score % 100 === 0) && level < maxLevel) {
       level++;
       obstacleVelocity += .9;
+      backgroundVel += .5;
+      foregroundVel += .5;
+      updateBgVel();
       updateObstacleVel();
       scoreVel = initScoreVel * ((100 - (level * 10)) / 100);
     }
@@ -350,8 +366,45 @@ function updateObstacleVel() {
   }
 }
 
+function updateBgVel() {
+  for (const item of bgArray) {
+    item.backgroundVel = backgroundVel;
+    item.foregroundVel = foregroundVel;
+  }
+}
+
+let backgroundVel = initialBackgroundVel;
+let foregroundVel = initialForegroundVel;
+const background = new Background(0, 0, backgroundVel, foregroundVel);
+const background2 = new Background(width, width, backgroundVel, foregroundVel);
+let bgArray = [background, background2];
+
 function loop() {
   ctx.fillRect(0, 0, width, height);
+
+  // all the backgrounds should be drawn first, otherwise the velocity discrepancy
+  // will eventually cause background to cover foreground  
+  for (let i = 0; i < bgArray.length; i++) {
+    bgArray[i].drawBackground(ctx, skyImg);
+    bgArray[i].drawBackground(ctx, groundImg);
+  }
+
+  for (let i = 0; i < bgArray.length; i++) {
+    bgArray[i].drawForeground(ctx, skyObjectsImg);
+    bgArray[i].drawForeground(ctx, groundObjectsImg);
+    
+    if ((bgArray[i].backgroundX + width) <= 0) {
+      bgArray[i].backgroundX = width;
+    }
+    if ((bgArray[i].foregroundX + width) <= 0) {
+      bgArray[i].foregroundX = width;
+    }
+
+    if (startGame && !isDead) {
+      bgArray[i].updateBg();
+    }
+  }
+
 
   for (let i = 0; i < obstacleArray.length; i++) {
     if (obstacleArray[i].isVisible) {

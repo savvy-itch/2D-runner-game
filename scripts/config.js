@@ -12,7 +12,6 @@ export const deadVel = 10;
 export const runSprites = 7;
 export const jumpSprites = 7;
 export const deadSprites = 4;
-// export const offsetPerFrame = spriteY / Math.ceil(jumpSprites / 2);
 export const offsetPerFrame = 60;
 export const maxObstaclesPerScreen = 3;
 export const minDistanceBetweenObstacles = 50;
@@ -21,6 +20,8 @@ export const noObstaclesChance = .3; // 0 - 0.9
 export const scoreCharsAmount = 5;
 export const initScoreVel = 20;
 export const maxLevel = 5;
+export const initialBackgroundVel = 1;
+export const initialForegroundVel = 2;
 export const obstacles = [
   {
     imgSrc: "../images/obstacles/cave_rock4.png",

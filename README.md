@@ -1,6 +1,6 @@
 # 2D Runner Game (work in progress)
 
 Controls:
-- Start (`Enter`)
+- Start (`Enter`, `Spacebar`)
 - Stop (`Esc`)
-- Jump (`Spacebar`)
+- Jump (`Spacebar`, `ArrowUp`)
