@@ -1,4 +1,4 @@
-import { Background } from './background.js';
+import { Background, createBgElement } from './background.js';
 import {
   spriteX, 
   spriteY, 
@@ -20,9 +20,10 @@ import {
   spriteDeadXPadding,
   spriteDeadXNoPadding,
   initialBackgroundVel,
-  initialForegroundVel
+  initialForegroundVel,
+  levelsEnv
 } from './config.js';
-import { displayScore } from './helpers.js';
+import { displayScore, loadImages } from './helpers.js';
 import { populateMenu } from './menu.js';
 import {createSingleObstacle} from './obstacles.js'
 
@@ -40,6 +41,7 @@ ctx.fillRect(0, 0, width, height);
 ctx.translate(0, -height * 0.3);
 ctx.strokeRect(0, 0, width, height);
 
+let isLoading = false;
 let startGame = false; 
 let isJumpPressed = false;
 let isRunning = false;
@@ -55,14 +57,14 @@ let bestScore = 0;
 let isNewBest = false;
 let isRestart = false;
 
-const skyImg = new Image();
-skyImg.src = "../images/env/1/1.png";
-const skyObjectsImg = new Image();
-skyObjectsImg.src = "../images/env/1/4.png";
-const groundImg = new Image();
-groundImg.src = "../images/env/1/2.png";
-const groundObjectsImg = new Image();
-groundObjectsImg.src = "../images/env/1/3.png";
+// const skyImg = new Image();
+// skyImg.src = "../images/env/1/1.png";
+// const skyObjectsImg = new Image();
+// skyObjectsImg.src = "../images/env/1/4.png";
+// const groundImg = new Image();
+// groundImg.src = "../images/env/1/2.png";
+// const groundObjectsImg = new Image();
+// groundObjectsImg.src = "../images/env/1/3.png";
 
 const imageRun = new Image();
 imageRun.src = "../images/character/Run.png";
@@ -137,18 +139,18 @@ const imageDead = new Image();
 imageDead.src = "../images/character/Dead.png";
 
 document.addEventListener('DOMContentLoaded', () => {
-  let loadedImgs = 0;
-  for (let i = 0; i < obstacles.length; i++) {
-    const img = new Image();
-    img.src = obstacles[i].imgSrc;
-    img.onload = () => {
-      loadedImgs++;
-      if (loadedImgs === obstacles.length) {
-        isIdle = true;
-        loop();
-      }
-    }
-  }
+  isLoading = true;
+  loadImages()
+    .then(() => {
+      isIdle = true;
+      loop();
+    })
+    .catch(error => {
+      console.log('Error loading images:', error);
+    })
+    .finally(() => {
+      isLoading = false;
+    });
 });
 
 document.addEventListener('keyup', (e) => {
@@ -375,23 +377,37 @@ function updateBgVel() {
 
 let backgroundVel = initialBackgroundVel;
 let foregroundVel = initialForegroundVel;
-const background = new Background(0, 0, backgroundVel, foregroundVel);
-const background2 = new Background(width, width, backgroundVel, foregroundVel);
-let bgArray = [background, background2];
+let bgArray = [];
 
+// *level changes*
+// call the function that replaces old images with new for all the background screens that have x position of `width`;
+// only replace bgSky and bgGround
+// 3 stages - day/dusk/night 
+
+let replacedImgs = 0;
+let shouldUpdateBg = false;
 function loop() {
   ctx.fillRect(0, 0, width, height);
 
   // all the backgrounds should be drawn first, otherwise the velocity discrepancy
-  // will eventually cause background to cover foreground  
+  // will eventually cause background to cover foreground 
+  if (!shouldUpdateBg && score > 0 && (score % 400 === 0)) {
+    shouldUpdateBg = true;
+    if (env + 1 < levelsEnv.length) {
+      env++;
+    } else {
+      env = 0;
+    }
+  }
+  
   for (let i = 0; i < bgArray.length; i++) {
-    bgArray[i].drawBackground(ctx, skyImg);
-    bgArray[i].drawBackground(ctx, groundImg);
+    bgArray[i].drawBackground(ctx, bgArray[i].skyBg);
+    bgArray[i].drawBackground(ctx, bgArray[i].groundBg);
   }
 
   for (let i = 0; i < bgArray.length; i++) {
-    bgArray[i].drawForeground(ctx, skyObjectsImg);
-    bgArray[i].drawForeground(ctx, groundObjectsImg);
+    bgArray[i].drawForeground(ctx, bgArray[i].skyBgObj);
+    bgArray[i].drawForeground(ctx, bgArray[i].groundBgObj);
     
     if ((bgArray[i].backgroundX + width) <= 0) {
       bgArray[i].backgroundX = width;
@@ -399,12 +415,15 @@ function loop() {
     if ((bgArray[i].foregroundX + width) <= 0) {
       bgArray[i].foregroundX = width;
     }
+    if (shouldUpdateBg) {
+      // console.log(obstacleVelocity, velocity, backgroundVel, foregroundVel);
+      loadNextLvlImgs(bgArray[i]);
+    }
 
     if (startGame && !isDead) {
       bgArray[i].updateBg();
     }
   }
-
 
   for (let i = 0; i < obstacleArray.length; i++) {
     if (obstacleArray[i].isVisible) {
@@ -448,6 +467,27 @@ document.addEventListener('DOMContentLoaded', () => {
   for (let i = 0; i < maxObstaclesPerScreen; i++) {
     obstacleArray[i] = createSingleObstacle(obstacleArray, obstacleVelocity);
   }
+  for (let i = 0; i < 2; i++) {
+    bgArray[i] = createBgElement(env, i, backgroundVel, foregroundVel);
+  }
   displayScore(scoreSpan, score);
   updateBestResult();
 });
+
+let env = 0;
+function loadNextLvlImgs(bgElem) {
+  if (bgElem.backgroundX === width) {
+    // console.log('bgElem.backgroundX === width');
+    const skyBg = new Image();
+    skyBg.src = levelsEnv[env].skyBg;
+    bgElem.skyBg = skyBg;
+    const groundBg = new Image();
+    groundBg.src = levelsEnv[env].groundBg;
+    bgElem.groundBg = groundBg;
+    replacedImgs++;
+  }
+  if (replacedImgs === bgArray.length) {
+    replacedImgs = 0;
+    shouldUpdateBg = false;
+  }
+}

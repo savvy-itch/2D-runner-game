@@ -1,11 +1,24 @@
-import { canvasHeight, canvasWidth } from "./config.js";
+import { canvasHeight, canvasWidth, levelsEnv } from "./config.js";
 
 export class Background {
-  constructor(backgroundX, foregroundX, backgroundVel, foregroundVel) {
+  constructor(
+    backgroundX, 
+    foregroundX, 
+    backgroundVel, 
+    foregroundVel, 
+    skyBg, 
+    skyBgObj, 
+    groundBg, 
+    groundBgObj
+  ) {
     this.backgroundX = backgroundX;
     this.foregroundX = foregroundX;
     this.backgroundVel = backgroundVel;
     this.foregroundVel = foregroundVel;
+    this.skyBg = skyBg;
+    this.skyBgObj = skyBgObj;
+    this.groundBg = groundBg;
+    this.groundBgObj = groundBgObj;
   }
 
   drawBackground(ctx, img) {
@@ -32,4 +45,26 @@ export class Background {
     this.backgroundX -= this.backgroundVel;
     this.foregroundX -= this.foregroundVel;
   }
+}
+
+export function createBgElement(env, i, backgroundVel, foregroundVel) {
+  const skyBg = new Image();
+  skyBg.src = levelsEnv[env].skyBg;
+  const groundBg = new Image();
+  groundBg.src = levelsEnv[env].groundBg;
+  const skyBgObj = new Image();
+  skyBgObj.src = levelsEnv[0].skyBgObj;
+  const groundBgObj = new Image();
+  groundBgObj.src = levelsEnv[0].groundBgObj;
+  const background = new Background(
+    (canvasWidth * i), 
+    (canvasWidth * i),
+    backgroundVel,
+    foregroundVel,
+    skyBg, 
+    skyBgObj, 
+    groundBg, 
+    groundBgObj
+  );
+  return background;
 }

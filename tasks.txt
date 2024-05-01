@@ -14,10 +14,10 @@
   ! levels (speed)
     + level speed
     - change environment
+    ? create transitional images to smoothly change the colors
   + score count
     + handle max score 
   + best result
-  ? day/night change
   ? collectables
   ? sound FX + OST (similar to I Am Robot and Proud - The Electricity in Your House Wants to Sing)
 3) Background:
@@ -29,7 +29,7 @@
   ! background objects
     + draw static background
     + draw moving background
-    - draw changing background
+    + draw changing background
 + separate code into files
 4) Styling:
   - fonts
@@ -41,8 +41,12 @@
 6) Testing
 7) diplay controls tip at the start of the game for the first time
 8) Loading spinner before images are loaded
+9) Optimize images
+  - compress images
+  - serve images in correct sizes
 
-14/25
+15/27
 
 Bugs:
 - Sometimes obstacles overlap each other
+- When background changes, there's a small gap between the images 

@@ -137,7 +137,22 @@ export const menuHtml = {
     </button>
   `,
 }
-
-// game over
-// game over w/ new record
-// game beaten
+export const levelsEnv = [
+  {
+    level: 1,
+    skyBg: "../images/env/1/1.png",
+    groundBg: "../images/env/1/ground.png",
+    skyBgObj: "../images/env/1/4.png",
+    groundBgObj: "../images/env/1/3.png"
+  },
+  {
+    level: 2,
+    skyBg: "../images/env/1/dusk_sky.png",
+    groundBg: "../images/env/1/dusk_ground.png",
+  },
+  {
+    level: 3,
+    skyBg: "../images/env/1/night_sky.png",
+    groundBg: "../images/env/1/night_ground.png",
+  },
+]
