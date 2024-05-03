@@ -13,7 +13,6 @@
     + game restart
   ! levels (speed)
     + level speed
-    - change environment
     ? create transitional images to smoothly change the colors
   + score count
     + handle max score 
@@ -25,25 +24,24 @@
     + display a static obstacle on the screen;
     + display a moving obstacle on the screen;
     + randomize obstacles
-    - environment specific obstacles
-  ! background objects
+  + background objects
     + draw static background
     + draw moving background
     + draw changing background
 + separate code into files
 4) Styling:
-  - fonts
-  - colors
-  - ui animations
-    - animation when the best record gets beaten
+  + fonts
+  + colors
+  + ui animations
   - responsiveness
-5) add comments
+5) + add comments
 6) Testing
 7) diplay controls tip at the start of the game for the first time
 8) Loading spinner before images are loaded
 9) Optimize images
   - compress images
   - serve images in correct sizes
+10) favicon
 
 15/27
 

@@ -20,8 +20,11 @@ export const noObstaclesChance = .3; // 0 - 0.9
 export const scoreCharsAmount = 5;
 export const initScoreVel = 20;
 export const maxLevel = 5;
+export const maxScore = Number(String('').padStart(scoreCharsAmount, '9'));
+export const nextEnvScorePoint = 400;
 export const initialBackgroundVel = 1;
 export const initialForegroundVel = 2;
+export const initialScoreVel = 20;
 export const obstacles = [
   {
     imgSrc: "../images/obstacles/cave_rock4.png",
@@ -116,12 +119,15 @@ export const obstacles = [
 ];
 export const menuHtml = {
   gameBeaten: `
-    <p>Congratulations!</p>
+    <p class="dialog-heading">Congratulations!</p>
     <p>You beat the game!</p>
     <p>Now go outside and touch grass)</p>
+    <button id="restart-btn" class="restart-btn">
+      <img src="./images/restart-2.svg" alt="restart">
+    </button>
   `,
   gameOver: `
-    <p>Game Over</p>
+    <p class="dialog-heading">Game Over</p>
     <div class="dialog-results-container">
       <div class="best-record-wrapper">
         <p>Best score:</p>
@@ -132,8 +138,8 @@ export const menuHtml = {
         <p id="dialog-score">00000</p>
       </div>
     </div>
-    <button id="restart-btn">
-      <img src="./images/restart.svg" alt="restart">
+    <button id="restart-btn" class="restart-btn">
+      <img src="./images/restart-2.svg" alt="restart">
     </button>
   `,
 }
@@ -155,4 +161,4 @@ export const levelsEnv = [
     skyBg: "../images/env/1/night_sky.png",
     groundBg: "../images/env/1/night_ground.png",
   },
-]
+];

@@ -1,11 +1,10 @@
-import { Background, createBgElement } from './background.js';
+import { createBgElement } from './background.js';
 import {
   spriteX, 
   spriteY, 
   idleVelocity, 
   jumpSprites, 
   offsetPerFrame,
-  obstacles,
   maxObstaclesPerScreen,
   canvasWidth,
   canvasHeight,
@@ -21,16 +20,18 @@ import {
   spriteDeadXNoPadding,
   initialBackgroundVel,
   initialForegroundVel,
-  levelsEnv
+  levelsEnv,
+  maxScore,
+  nextEnvScorePoint,
 } from './config.js';
-import { displayScore, loadImages } from './helpers.js';
-import { populateMenu } from './menu.js';
+import { loadImages } from './helpers.js';
+import { displayDialog, hideDialog, populateMenu } from './menu.js';
 import {createSingleObstacle} from './obstacles.js'
+import { displayScore } from './score.js';
 
 const canvas = document.querySelector('.playfield');
-const scoreSpan = document.getElementById('score');
 const bestScoreSpan = document.getElementById('best');
-const dialogWindow = document.getElementById('dialog');
+const scoreSpan = document.getElementById('score');
 const startBtn = document.getElementById('start-btn');
 const width = canvas.width = canvasWidth;
 const height = canvas.height = canvasHeight;
@@ -50,35 +51,40 @@ let isDead = false;
 let sprite = 0;
 let frame = 0;
 let velocity = 5;
-let loopId;
 let deadAnimationplayed = false;
 let score = 0;
 let bestScore = 0;
 let isNewBest = false;
 let isRestart = false;
-
-// const skyImg = new Image();
-// skyImg.src = "../images/env/1/1.png";
-// const skyObjectsImg = new Image();
-// skyObjectsImg.src = "../images/env/1/4.png";
-// const groundImg = new Image();
-// groundImg.src = "../images/env/1/2.png";
-// const groundObjectsImg = new Image();
-// groundObjectsImg.src = "../images/env/1/3.png";
+let posY = 0;
+let loopId;
 
 const imageRun = new Image();
 imageRun.src = "../images/character/Run.png";
+const imageIdle = new Image();
+imageIdle.src = "../images/character/Idle.png";
+const imageJump = new Image();
+imageJump.src = "../images/character/Jump.png";
+const imageDead = new Image();
+imageDead.src = "../images/character/Dead.png";
+
 document.addEventListener('keyup', (e) => {
   if (e.key === 'Enter' && !startGame && !isRestart) {
     startGameFn();
   }
 });
 
-const imageIdle = new Image();
-imageIdle.src = "../images/character/Idle.png";
+document.addEventListener('DOMContentLoaded', () => {
+  for (let i = 0; i < maxObstaclesPerScreen; i++) {
+    obstacleArray[i] = createSingleObstacle(obstacleArray, obstacleVelocity);
+  }
+  for (let i = 0; i < 2; i++) {
+    bgArray[i] = createBgElement(env, i, backgroundVel, foregroundVel);
+  }
+  displayScore(scoreSpan, score);
+  updateBestResult();
+});
 
-const imageJump = new Image();
-imageJump.src = "../images/character/Jump.png";
 document.addEventListener('keydown', (e) => {
   if ((e.code === 'Space' || e.code === 'ArrowUp') && startGame && !isJumpPressed) {
     sprite = 0;
@@ -86,57 +92,6 @@ document.addEventListener('keydown', (e) => {
     isJumpPressed = true;
   }
 });
-
-startBtn.addEventListener('click', () => {
-  startGameFn();
-})
-
-function startGameFn() {
-  startBtn.classList.remove('show-start-btn');
-  startGame = true;
-  isRunning = true;
-  isIdle = false;
-  isDead = false;
-  score = 0;
-  isNewBest = false;
-  displayScore(scoreSpan, score);
-  updateBestResult();
-}
-
-function restartGame() {
-  for (let i = 0; i < bgArray.length; i++) {
-    bgArray[i].backgroundX = i * width;
-    bgArray[i].foregroundX = i * width;
-  }
-  backgroundVel = initialBackgroundVel;
-  foregroundVel = initialForegroundVel;
-  obstacleArray = Array.from({length: maxObstaclesPerScreen});
-  obstacleVelocity = 6;
-  scoreFreq = 0;
-  scoreVel = 20;
-  level = 1;
-  sprite = 0;
-  frame = 0;
-  
-  for (let i = 0; i < maxObstaclesPerScreen; i++) {
-    obstacleArray[i] = createSingleObstacle(obstacleArray, obstacleVelocity);
-  }
-
-  hideDialog();
-  startGame = true;
-  isRunning = true;
-  isIdle = false;
-  isDead = false;
-  score = 0;
-  isNewBest = false;
-  deadAnimationplayed = false;
-  displayScore(scoreSpan, score);
-  updateBestResult();
-  loop();
-}
-
-const imageDead = new Image();
-imageDead.src = "../images/character/Dead.png";
 
 document.addEventListener('DOMContentLoaded', () => {
   isLoading = true;
@@ -160,6 +115,53 @@ document.addEventListener('keyup', (e) => {
   }
 });
 
+startBtn.addEventListener('click', () => {
+  startGameFn();
+})
+
+function startGameFn() {
+  startBtn.classList.remove('show-start-btn');
+  resetSettings();
+  displayScore(scoreSpan, score);
+  updateBestResult();
+}
+
+function restartGame() {
+  for (let i = 0; i < bgArray.length; i++) {
+    bgArray[i].backgroundX = i * width;
+    bgArray[i].foregroundX = i * width;
+  }
+  backgroundVel = initialBackgroundVel;
+  foregroundVel = initialForegroundVel;
+  obstacleArray = Array.from({length: maxObstaclesPerScreen});
+  obstacleVelocity = 6;
+  scoreFreq = 0;
+  scoreVel = initScoreVel;
+  level = 1;
+  sprite = 0;
+  frame = 0;
+  
+  for (let i = 0; i < maxObstaclesPerScreen; i++) {
+    obstacleArray[i] = createSingleObstacle(obstacleArray, obstacleVelocity);
+  }
+
+  hideDialog();
+  resetSettings();
+  displayScore(scoreSpan, score);
+  updateBestResult();
+  loop();
+}
+
+function resetSettings() {
+  startGame = true;
+  isRunning = true;
+  isIdle = false;
+  isDead = false;
+  score = 0;
+  isNewBest = false;
+  deadAnimationplayed = false;
+}
+
 function endGame(type) {
   startGame = false;
   window.cancelAnimationFrame(loopId);
@@ -181,14 +183,6 @@ function endGame(type) {
       }
     });
   }, 300);
-}
-
-function displayDialog() {
-  dialogWindow.classList.add('show-dialog');
-}
-
-function hideDialog() {
-  dialogWindow.classList.remove('show-dialog');
 }
 
 // =========== Character ===============
@@ -253,7 +247,7 @@ class Hero {
     
     slowFramerate(4, jumpSprites);
   
-    // accending and descending
+    // ascending and descending
     if (sprite < Math.ceil(jumpSprites / 2)) {
       posY = sprite * offsetPerFrame;
     } else {
@@ -285,6 +279,7 @@ class Hero {
     );
     // ctx.strokeRect(0, this.y - posY, spriteDeadXNoPadding, spriteYNoPadding);
 
+    // if animation has finished
     if (sprite >= deadSprites) {
       deadAnimationplayed = true;
     } else {
@@ -305,8 +300,6 @@ class Hero {
 
 const hero = new Hero(25, height - spriteYNoPadding);
 
-let posY = 0;
-
 function slowFramerate(velocity, numOfSprites) {
   if (frame % velocity === 0) {
     if (sprite === numOfSprites) {
@@ -318,12 +311,24 @@ function slowFramerate(velocity, numOfSprites) {
   }
 }
 
+function updateBestResult() {
+  const currentBest = sessionStorage.getItem("best-score");
+  if (!currentBest || (score > currentBest)) {
+    bestScore = score;
+    sessionStorage.removeItem("best-score");
+    sessionStorage.setItem("best-score", bestScore);
+    isNewBest = true;
+  } else {
+    bestScore = currentBest;
+  }
+  displayScore(bestScoreSpan, bestScore);
+}
+
 let obstacleArray = Array.from({length: maxObstaclesPerScreen});
 let obstacleVelocity = 6;
 let scoreFreq = 0;
-let scoreVel = 20;
+let scoreVel = initScoreVel;
 let level = 1;
-const maxScore = Number(String('').padStart(scoreCharsAmount, '9'));
 
 function updateScore() {
   if (score === maxScore) {
@@ -348,20 +353,6 @@ function updateScore() {
   }
 }
 
-function updateBestResult() {
-  const currentBest = sessionStorage.getItem("best-score");
-  if (!currentBest || (score > currentBest)) {
-    bestScore = score;
-    sessionStorage.removeItem("best-score");
-    sessionStorage.setItem("best-score", bestScore);
-    displayScore(bestScoreSpan, bestScore);
-    isNewBest = true;
-  } else {
-    bestScore = currentBest;
-    displayScore(bestScoreSpan, bestScore);
-  }
-}
-
 function updateObstacleVel() {
   for (const item of obstacleArray) {
     item.vel = obstacleVelocity;
@@ -378,20 +369,15 @@ function updateBgVel() {
 let backgroundVel = initialBackgroundVel;
 let foregroundVel = initialForegroundVel;
 let bgArray = [];
-
-// *level changes*
-// call the function that replaces old images with new for all the background screens that have x position of `width`;
-// only replace bgSky and bgGround
-// 3 stages - day/dusk/night 
-
 let replacedImgs = 0;
 let shouldUpdateBg = false;
+let env = 0;
+
 function loop() {
   ctx.fillRect(0, 0, width, height);
 
-  // all the backgrounds should be drawn first, otherwise the velocity discrepancy
-  // will eventually cause background to cover foreground 
-  if (!shouldUpdateBg && score > 0 && (score % 400 === 0)) {
+  // change bg images
+  if (!shouldUpdateBg && score > 0 && (score % nextEnvScorePoint === 0)) {
     shouldUpdateBg = true;
     if (env + 1 < levelsEnv.length) {
       env++;
@@ -400,6 +386,8 @@ function loop() {
     }
   }
   
+  // all the backgrounds should be drawn first, otherwise the velocity discrepancy
+  // will eventually cause background to cover foreground 
   for (let i = 0; i < bgArray.length; i++) {
     bgArray[i].drawBackground(ctx, bgArray[i].skyBg);
     bgArray[i].drawBackground(ctx, bgArray[i].groundBg);
@@ -416,7 +404,6 @@ function loop() {
       bgArray[i].foregroundX = width;
     }
     if (shouldUpdateBg) {
-      // console.log(obstacleVelocity, velocity, backgroundVel, foregroundVel);
       loadNextLvlImgs(bgArray[i]);
     }
 
@@ -463,21 +450,8 @@ function loop() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  for (let i = 0; i < maxObstaclesPerScreen; i++) {
-    obstacleArray[i] = createSingleObstacle(obstacleArray, obstacleVelocity);
-  }
-  for (let i = 0; i < 2; i++) {
-    bgArray[i] = createBgElement(env, i, backgroundVel, foregroundVel);
-  }
-  displayScore(scoreSpan, score);
-  updateBestResult();
-});
-
-let env = 0;
 function loadNextLvlImgs(bgElem) {
   if (bgElem.backgroundX === width) {
-    // console.log('bgElem.backgroundX === width');
     const skyBg = new Image();
     skyBg.src = levelsEnv[env].skyBg;
     bgElem.skyBg = skyBg;

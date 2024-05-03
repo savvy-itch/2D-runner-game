@@ -25,3 +25,11 @@ export function populateMenu(type, bestScore, score, isNewBest) {
     scoreElem.textContent = score;
   }
 }
+
+export function displayDialog() {
+  dialogWindow.classList.add('show-dialog');
+}
+
+export function hideDialog() {
+  dialogWindow.classList.remove('show-dialog');
+}

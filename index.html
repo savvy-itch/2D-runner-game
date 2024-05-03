@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dino Game</title>
     <link href="style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap" rel="stylesheet">
   </head>
   <body>
     <h1>Dino Game!</h1>
@@ -13,17 +16,18 @@
         <p>Dino Game</p>
       </canvas>
       <div class="hud-container">
-        <div class="best-container">Best: <span id="best">00000</span></div>
+        <div class="best-container text-highlight">Best: <span id="best">00000</span></div>
         <div class="score-container">Score: <span id="score">00000</span></div>
       </div>
       <div id="dialog" class="dialog">
       </div>
       <button id="start-btn" class="start-btn show-start-btn">
-        <img src="./images/play.svg" alt="play button">
+        <img src="./images/play-2.svg" alt="play button">
       </button>
     </div>
     
     <script src="scripts/config.js" type="module"></script>
+    <script src="scripts/score.js" type="module"></script>
     <script src="scripts/helpers.js" type="module"></script>
     <script src="scripts/obstacles.js" type="module"></script>
     <script src="scripts/main.js" type="module"></script>

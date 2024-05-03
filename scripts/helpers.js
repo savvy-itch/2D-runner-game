@@ -1,12 +1,8 @@
-import { levelsEnv, obstacles, scoreCharsAmount } from "./config.js";
+import { levelsEnv, obstacles } from "./config.js";
 
 export function getRandom(min, max) {
   const num = Math.floor(Math.random() * (max - min + 1)) + min;
   return num;
-}
-
-export function displayScore(HTMLelement, score) {
-  HTMLelement.textContent = String(score).padStart(scoreCharsAmount, '0');
 }
 
 export function loadImages() {
