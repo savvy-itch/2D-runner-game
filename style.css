@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 html {
@@ -18,17 +19,16 @@ html {
 }
 
 body {
-  margin: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   min-height: 100dvh;
+  width: 100vw;
   background-color: hsl(240, 40%, 37%);
   color: white;
   padding: 0 4rem;
-  overflow: hidden;
 }
 
 h1 {
@@ -97,9 +97,9 @@ h1 {
 .hud-container {
   --font-size: 1.5rem;
 
-  max-width: 50%;
+  /* max-width: 50%; */
   position: absolute;
-  right: 15px;
+  right: 5%;
   top: 15px;
   display: flex;
   justify-content: space-between;
@@ -259,7 +259,7 @@ h1 {
   font-size: .9rem;
   background-color: var(--footer-bg);
   color: var(--border-color);
-  width: 100%;
+  width: 100vw;
   padding: 1.2rem 5rem;
   display: flex;
   justify-content: space-between;
@@ -267,7 +267,6 @@ h1 {
   transition: color var(--transition);
 
   a {
-    /* color: var(--menu-bg); */
     color: var(--highlight-color);
   }
   a:hover {
@@ -309,6 +308,10 @@ h1 {
   height: auto;
 }
 
+.game-title {
+  font-family: "Poetsen One", sans-serif;
+}
+
 .svg-icon {
   stroke: var(--border-color);
   fill: none;
@@ -337,5 +340,52 @@ h1 {
   }
   100% {
     filter: hue-rotate(360deg);
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  body {
+    padding: 0 1rem;
+  }
+
+  h1 {
+    margin: 1rem 0;
+    font-size: 2rem;
+  }
+  
+  .footer {
+    padding: 1rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .hud-container {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .footer {
+    font-size: .6rem;
+
+    h2 {
+      font-size: 1rem;
+    }
+  }
+
+  .svg-icon {
+    width: 16px; 
+    height: 16px;
+  }
+
+  .show-dialog {
+    padding: 1rem;
+    font-size: 1.5rem;
+    max-width: 100%;
+    max-height: 95%;
+  }
+
+  .show-dialog .dialog-heading {
+    font-size: 1.8rem;
+    margin: 0 0 1.5rem 0;
   }
 }

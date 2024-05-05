@@ -33,7 +33,7 @@
   + fonts
   + colors
   + ui animations
-  - responsiveness
+  + responsiveness
 5) + add comments
 6) Testing
 + diplay controls tip at the start of the game
@@ -47,3 +47,4 @@
 Bugs:
 - Sometimes obstacles overlap each other
 - When background changes, there's a small gap between the images 
+- bg doesn't reset on new game after death

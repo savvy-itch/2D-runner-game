@@ -1,4 +1,5 @@
-export const canvasWidth = window.innerWidth > 1600 ? 900 : 700;
+const smallScreen = window.innerWidth > 1024 ? 700 : window.innerWidth * .95;
+export const canvasWidth = window.innerWidth > 1600 ? 900 : smallScreen;
 export const canvasHeight = window.innerWidth > 1600 ? 500 : 400;
 export const deadSprites = 4;
 export const deadVel = 10;
