@@ -36,14 +36,13 @@
   - responsiveness
 5) + add comments
 6) Testing
-7) diplay controls tip at the start of the game for the first time
-8) Loading spinner before images are loaded
++ diplay controls tip at the start of the game
++ Loading spinner before images are loaded
 9) Optimize images
   - compress images
   - serve images in correct sizes
-10) favicon
-
-15/27
++ footer
+11) favicon
 
 Bugs:
 - Sometimes obstacles overlap each other

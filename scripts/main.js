@@ -1,14 +1,13 @@
 import { createBgElement } from './background.js';
 import {
-  spriteX, 
+  canvasWidth,
+  canvasHeight,
+  spriteX,
   spriteY, 
   idleVelocity, 
   jumpSprites, 
   offsetPerFrame,
   maxObstaclesPerScreen,
-  canvasWidth,
-  canvasHeight,
-  scoreCharsAmount,
   initScoreVel,
   maxLevel,
   spriteXPadding,
@@ -25,10 +24,11 @@ import {
   nextEnvScorePoint,
 } from './config.js';
 import { loadImages } from './helpers.js';
-import { displayDialog, hideDialog, populateMenu } from './menu.js';
+import { displayControls, displayDialog, hideDialog, populateMenu } from './menu.js';
 import {createSingleObstacle} from './obstacles.js'
 import { displayScore } from './score.js';
 
+const loader = document.querySelector('.loader-wrapper');
 const canvas = document.querySelector('.playfield');
 const bestScoreSpan = document.getElementById('best');
 const scoreSpan = document.getElementById('score');
@@ -40,7 +40,6 @@ const ctx = canvas.getContext('2d');
 ctx.fillStyle = 'beige';
 ctx.fillRect(0, 0, width, height);
 ctx.translate(0, -height * 0.3);
-ctx.strokeRect(0, 0, width, height);
 
 let isLoading = false;
 let startGame = false; 
@@ -94,6 +93,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+  loader.classList.add('show-loader');
   isLoading = true;
   loadImages()
     .then(() => {
@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .finally(() => {
       isLoading = false;
+      loader.classList.remove('show-loader');
     });
 });
 
@@ -117,13 +118,14 @@ document.addEventListener('keyup', (e) => {
 
 startBtn.addEventListener('click', () => {
   startGameFn();
-})
+});
 
 function startGameFn() {
   startBtn.classList.remove('show-start-btn');
   resetSettings();
   displayScore(scoreSpan, score);
   updateBestResult();
+  displayControls();
 }
 
 function restartGame() {
@@ -149,6 +151,7 @@ function restartGame() {
   resetSettings();
   displayScore(scoreSpan, score);
   updateBestResult();
+  displayControls();
   loop();
 }
 
@@ -419,7 +422,7 @@ function loop() {
 
     // only start moving obstacles when the game is on
     if (startGame && !isDead) {
-      obstacleArray[i].updateObstacle(ctx);
+      obstacleArray[i].updateObstacle();
       updateScore();
       if (hero.detectCollision(obstacleArray[i].x, obstacleArray[i].y)) {
         isDead = true;

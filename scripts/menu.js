@@ -1,6 +1,7 @@
 import { menuHtml } from "./config.js";
 
 const dialogWindow = document.getElementById('dialog');
+const controlsDiv = document.getElementById('controls-tip');
 
 export function populateMenu(type, bestScore, score, isNewBest) {
   let content;
@@ -32,4 +33,11 @@ export function displayDialog() {
 
 export function hideDialog() {
   dialogWindow.classList.remove('show-dialog');
+}
+
+export function displayControls() {
+  controlsDiv.classList.add('show-controls-tip');
+  setTimeout(() => {
+    controlsDiv.classList.remove('show-controls-tip');
+  }, 1000);
 }

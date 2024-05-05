@@ -1,7 +1,6 @@
 * {
   margin: 0;
   padding: 0;
-  font-family: "Poetsen One", sans-serif;
 }
 
 html {
@@ -13,6 +12,9 @@ html {
   --start-btn-active: hsl(219, 39%, 47%);
   --border-color: #FFFBDA;
   --dialog-bg: #C0D6E8;
+  --footer-bg: #222831;
+  --highlight-color: hsl(348, 89%, 66%);
+  --highlight-hover: hsl(348, 89%, 60%);
 }
 
 body {
@@ -20,20 +22,68 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  min-width: 100dvh;
+  min-height: 100dvh;
   background-color: hsl(240, 40%, 37%);
   color: white;
+  padding: 0 4rem;
+  overflow: hidden;
 }
 
 h1 {
+  font-family: "Poetsen One", sans-serif;
   font-size: 3rem;
   margin: 2rem 0;
 }
 
 .container {
   position: relative;
+}
+
+.container * {
+  font-family: "Poetsen One", sans-serif;
+}
+
+.loader-wrapper {
+  display: none;
+}
+
+.show-loader {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+}
+
+.loader {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  background: linear-gradient(0deg, #A0153E 33%, hsl(348, 100%, 66%) 100%);
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+.loader::after {
+  content: '';  
+  box-sizing: border-box;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: white;
+}
+
+@keyframes rotation {
+  0% { transform: rotate(0deg) }
+  100% { transform: rotate(360deg)}
 }
 
 .playfield {
@@ -125,7 +175,7 @@ h1 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 15%;
+  width: 100px;
   background-color: var(--start-btn-color);
   border-radius: 50%;
   border: none;
@@ -169,6 +219,104 @@ h1 {
   color: #00BCD4;
   text-shadow: 0 0 15px #CDDC39, 0 0 25px #CDDC39;
   animation: glow 1.5s linear infinite;
+}
+
+.controls-tip {
+  display: none;
+}
+
+.show-controls-tip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  position: absolute;
+  top: 27%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  p {
+    font-family: "Wellfleet", monospace;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--text-color);
+  }
+}
+
+.control-keys {
+  display: flex;
+  gap: 15px;
+  justify-content: space-between;
+  align-items: center;
+
+  p {
+    font-size: 2rem;
+  }
+}
+
+.footer {
+  font-family: sans-serif;
+  font-size: .9rem;
+  background-color: var(--footer-bg);
+  color: var(--border-color);
+  width: 100%;
+  padding: 1.2rem 5rem;
+  display: flex;
+  justify-content: space-between;
+  border-top: 2px solid var(--border-color);
+  transition: color var(--transition);
+
+  a {
+    /* color: var(--menu-bg); */
+    color: var(--highlight-color);
+  }
+  a:hover {
+    color: var(--highlight-hover);
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    margin-bottom: .5rem;
+    text-align: center;
+  }
+}
+
+.creator-info {
+  align-self: flex-end;
+}
+
+.footer-info {
+  list-style: none;
+}
+
+.footer-info li {
+  margin-top: .5rem;
+  text-align: center;
+}
+
+.contact-list {
+  display: flex;
+  gap: .7rem;
+  margin-bottom: 1rem;
+}
+
+.contact-list li {
+  list-style: none;
+}
+
+.contact-list img {
+  width: 1.7rem;
+  height: auto;
+}
+
+.svg-icon {
+  stroke: var(--border-color);
+  fill: none;
+  transition: stroke var(--transition);
+}
+
+.svg-icon:hover {
+  stroke: var(--highlight-hover);
 }
 
 @keyframes popup {
