@@ -59,13 +59,13 @@ let posY = 0;
 let loopId;
 
 const imageRun = new Image();
-imageRun.src = "../images/character/Run.png";
+imageRun.src = "images/character/Run.png";
 const imageIdle = new Image();
-imageIdle.src = "../images/character/Idle.png";
+imageIdle.src = "images/character/Idle.png";
 const imageJump = new Image();
-imageJump.src = "../images/character/Jump.png";
+imageJump.src = "images/character/Jump.png";
 const imageDead = new Image();
-imageDead.src = "../images/character/Dead.png";
+imageDead.src = "images/character/Dead.png";
 
 document.addEventListener('keyup', (e) => {
   if (e.key === 'Enter' && !startGame && !isRestart) {

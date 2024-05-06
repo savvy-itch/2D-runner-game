@@ -25,92 +25,92 @@ export const spriteXPadding = (spriteX - spriteXNoPadding) / 2;
 export const spriteDeadXPadding = (spriteX - spriteDeadXNoPadding) / 2;
 export const obstacles = [
   {
-    imgSrc: "../images/obstacles/cave_rock4.png",
+    imgSrc: "images/obstacles/cave_rock4.png",
     sizeX: 63,
     sizeY: 44,
   },
   {
-    imgSrc: "../images/obstacles/cave_rock5.png",
+    imgSrc: "images/obstacles/cave_rock5.png",
     sizeX: 29,
     sizeY: 24,
   },
   {
-    imgSrc: "../images/obstacles/Bush4_4.png",
+    imgSrc: "images/obstacles/Bush4_4.png",
     sizeX: 48,
     sizeY: 40,
   },
   {
-    imgSrc: "../images/obstacles/Bush5_4.png",
+    imgSrc: "images/obstacles/Bush5_4.png",
     sizeX: 59,
     sizeY: 23,
   },
   {
-    imgSrc: "../images/obstacles/Bush6_3.png",
+    imgSrc: "images/obstacles/Bush6_3.png",
     sizeX: 59,
     sizeY: 42,
   },
   {
-    imgSrc: "../images/obstacles/Bush6_4.png",
+    imgSrc: "images/obstacles/Bush6_4.png",
     sizeX: 46,
     sizeY: 30,
   },
   {
-    imgSrc: "../images/obstacles/Bush7_4.png",
+    imgSrc: "images/obstacles/Bush7_4.png",
     sizeX: 47,
     sizeY: 21,
   },
   {
-    imgSrc: "../images/obstacles/Bush8_4.png",
+    imgSrc: "images/obstacles/Bush8_4.png",
     sizeX: 43,
     sizeY: 21,
   },
   {
-    imgSrc: "../images/obstacles/canyon_rock3.png",
+    imgSrc: "images/obstacles/canyon_rock3.png",
     sizeX: 46,
     sizeY: 66,
   },
   {
-    imgSrc: "../images/obstacles/canyon_rock4.png",
+    imgSrc: "images/obstacles/canyon_rock4.png",
     sizeX: 35,
     sizeY: 50,
   },
   {
-    imgSrc: "../images/obstacles/desert_rock4.png",
+    imgSrc: "images/obstacles/desert_rock4.png",
     sizeX: 58,
     sizeY: 18,
   },
   {
-    imgSrc: "../images/obstacles/fir_tree_6.png",
+    imgSrc: "images/obstacles/fir_tree_6.png",
     sizeX: 36,
     sizeY: 55,
   },
   {
-    imgSrc: "../images/obstacles/fir_tree_11.png",
+    imgSrc: "images/obstacles/fir_tree_11.png",
     sizeX: 23,
     sizeY: 34,
   },
   {
-    imgSrc: "../images/obstacles/jungle_tree_13.png",
+    imgSrc: "images/obstacles/jungle_tree_13.png",
     sizeX: 20,
     sizeY: 29,
   },
   {
-    imgSrc: "../images/obstacles/middle_lane_rock1_4.png",
+    imgSrc: "images/obstacles/middle_lane_rock1_4.png",
     sizeX: 61,
     sizeY: 40,
   },
   {
-    imgSrc: "../images/obstacles/middle_lane_rock1_5.png",
+    imgSrc: "images/obstacles/middle_lane_rock1_5.png",
     sizeX: 41,
     sizeY: 26,
   },
   {
-    imgSrc: "../images/obstacles/middle_lane_tree9.png",
+    imgSrc: "images/obstacles/middle_lane_tree9.png",
     sizeX: 26,
     sizeY: 34,
   },
   {
-    imgSrc: "../images/obstacles/middle_lane_tree10.png",
+    imgSrc: "images/obstacles/middle_lane_tree10.png",
     sizeX: 27,
     sizeY: 70,
   },
@@ -137,26 +137,26 @@ export const menuHtml = {
       </div>
     </div>
     <button id="restart-btn" class="restart-btn">
-      <img src="./images/restart-2.svg" alt="restart">
+      <img src=images/restart-2.svg" alt="restart">
     </button>
   `,
 }
 export const levelsEnv = [
   {
     level: 1,
-    skyBg: "../images/env/1/1.png",
-    groundBg: "../images/env/1/ground.png",
-    skyBgObj: "../images/env/1/4.png",
-    groundBgObj: "../images/env/1/3.png"
+    skyBg: "images/env/1/1.png",
+    groundBg: "images/env/1/ground.png",
+    skyBgObj: "images/env/1/4.png",
+    groundBgObj: "images/env/1/3.png"
   },
   {
     level: 2,
-    skyBg: "../images/env/1/dusk_sky.png",
-    groundBg: "../images/env/1/dusk_ground.png",
+    skyBg: "images/env/1/dusk_sky.png",
+    groundBg: "images/env/1/dusk_ground.png",
   },
   {
     level: 3,
-    skyBg: "../images/env/1/night_sky.png",
-    groundBg: "../images/env/1/night_ground.png",
+    skyBg: "images/env/1/night_sky.png",
+    groundBg: "images/env/1/night_ground.png",
   },
 ];
