@@ -40,3 +40,12 @@ export function loadImages() {
     }
   });
 };
+
+export function loadBgImage(bgElem, env) {
+  const skyBg = new Image();
+  skyBg.src = levelsEnv[env].skyBg;
+  bgElem.skyBg = skyBg;
+  const groundBg = new Image();
+  groundBg.src = levelsEnv[env].groundBg;
+  bgElem.groundBg = groundBg;
+}

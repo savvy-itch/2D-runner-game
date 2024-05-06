@@ -23,8 +23,8 @@ import {
   maxScore,
   nextEnvScorePoint,
 } from './config.js';
-import { loadImages } from './helpers.js';
-import { displayControls, displayDialog, hideDialog, populateMenu } from './menu.js';
+import { loadBgImage, loadImages } from './helpers.js';
+import { displayControls, displayDialog, hideDialog, populateControlsTip, populateMenu } from './menu.js';
 import {createSingleObstacle} from './obstacles.js'
 import { displayScore } from './score.js';
 
@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   displayScore(scoreSpan, score);
   updateBestResult();
+  populateControlsTip();
 });
 
 document.addEventListener('keydown', (e) => {
@@ -91,6 +92,14 @@ document.addEventListener('keydown', (e) => {
     isJumpPressed = true;
   }
 });
+
+document.addEventListener('touchstart', () => {
+  if (startGame && !isJumpPressed) {
+    sprite = 0;
+    isRunning = false;
+    isJumpPressed = true;
+  }
+}, false);
 
 document.addEventListener('DOMContentLoaded', () => {
   loader.classList.add('show-loader');
@@ -129,9 +138,11 @@ function startGameFn() {
 }
 
 function restartGame() {
+  env = 0;
   for (let i = 0; i < bgArray.length; i++) {
     bgArray[i].backgroundX = i * width;
     bgArray[i].foregroundX = i * width;
+    loadBgImage(bgArray[i], env);
   }
   backgroundVel = initialBackgroundVel;
   foregroundVel = initialForegroundVel;
@@ -455,12 +466,7 @@ function loop() {
 
 function loadNextLvlImgs(bgElem) {
   if (bgElem.backgroundX === width) {
-    const skyBg = new Image();
-    skyBg.src = levelsEnv[env].skyBg;
-    bgElem.skyBg = skyBg;
-    const groundBg = new Image();
-    groundBg.src = levelsEnv[env].groundBg;
-    bgElem.groundBg = groundBg;
+    loadBgImage(bgElem, env);
     replacedImgs++;
   }
   if (replacedImgs === bgArray.length) {

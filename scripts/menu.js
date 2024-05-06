@@ -1,4 +1,4 @@
-import { menuHtml } from "./config.js";
+import { controlsTipHtml, menuHtml } from "./config.js";
 
 const dialogWindow = document.getElementById('dialog');
 const controlsDiv = document.getElementById('controls-tip');
@@ -33,6 +33,14 @@ export function displayDialog() {
 
 export function hideDialog() {
   dialogWindow.classList.remove('show-dialog');
+}
+
+export function populateControlsTip() {
+  if (window.innerWidth > 1024) {
+    controlsDiv.innerHTML = controlsTipHtml.keyboard;
+  } else {
+    controlsDiv.innerHTML = controlsTipHtml.touchScreen;
+  }
 }
 
 export function displayControls() {

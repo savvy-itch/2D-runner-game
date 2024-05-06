@@ -37,14 +37,17 @@
 5) + add comments
 6) Testing
 + diplay controls tip at the start of the game
+  + display different tips depending on device screen width
 + Loading spinner before images are loaded
 9) Optimize images
   - compress images
   - serve images in correct sizes
 + footer
-11) favicon
++ favicon
++ add mobile controls
 
 Bugs:
 - Sometimes obstacles overlap each other
 - When background changes, there's a small gap between the images 
-- bg doesn't reset on new game after death
++ bg doesn't reset on new game after death
++ on mobile screen the footer doesn't fit on 100dvh

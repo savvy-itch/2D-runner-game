@@ -352,6 +352,17 @@ h1 {
     margin: 1rem 0;
     font-size: 2rem;
   }
+
+  .show-controls-tip {
+    top: 30%;
+    p {
+      font-size: 1.3rem;
+    }
+  }
+
+  .control-keys img {
+    animation: pulse 1s linear infinite;
+  }
   
   .footer {
     padding: 1rem;
@@ -387,5 +398,17 @@ h1 {
   .show-dialog .dialog-heading {
     font-size: 1.8rem;
     margin: 0 0 1.5rem 0;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(.8);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(.8);
   }
 }

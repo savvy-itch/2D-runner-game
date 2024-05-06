@@ -1,6 +1,7 @@
-const smallScreen = window.innerWidth > 1024 ? 700 : window.innerWidth * .95;
-export const canvasWidth = window.innerWidth > 1600 ? 900 : smallScreen;
-export const canvasHeight = window.innerWidth > 1600 ? 500 : 400;
+const smallScreenWidth = window.innerWidth > 1024 ? 700 : window.innerWidth * .95;
+const smallScreenHeight = window.innerWidth > 1024 ? 400 : window.innerHeight * .5;
+export const canvasWidth = window.innerWidth > 1600 ? 900 : smallScreenWidth;
+export const canvasHeight = window.innerWidth > 1600 ? 500 : smallScreenHeight;
 export const deadSprites = 4;
 export const deadVel = 10;
 export const idleVelocity = 13;
@@ -160,3 +161,19 @@ export const levelsEnv = [
     groundBg: "images/env/1/night_ground.png",
   },
 ];
+export const controlsTipHtml = {
+  touchScreen: `
+    <p>Tap to jump</p>
+    <div class="control-keys">
+      <img src="./images/touch-icon.png" alt="touch">
+    </div>
+  `,
+  keyboard: `
+    <p>Jump</p>
+    <div class="control-keys">
+      <img src="./images/arrow-up2.png" alt="arrow up">
+      <p>or</p>
+      <img src="./images/spacebar2.png" alt="spacebar">
+    </div>
+  `
+} 
