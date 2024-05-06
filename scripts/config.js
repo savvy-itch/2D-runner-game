@@ -137,7 +137,7 @@ export const menuHtml = {
       </div>
     </div>
     <button id="restart-btn" class="restart-btn">
-      <img src=./images/restart-2.svg" alt="restart">
+      <img src="./images/restart-2.svg" alt="restart">
     </button>
   `,
 }
