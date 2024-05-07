@@ -37,6 +37,29 @@ h1 {
   margin: 2rem 0;
 }
 
+.audio-switch-btn {
+  padding: 8px;
+  border-radius: 4px;
+  display: flex;
+  border: 2px solid var(--border-color);
+  background-color: var(--dialog-bg);
+  box-shadow: 2px 3px #999;
+
+  img {
+    width: 1.7rem;
+  }
+}
+
+.audio-switch-btn:hover {
+  cursor: pointer;
+  background-color: var(--start-btn-color);
+}
+
+.audio-switch-btn:active {
+  box-shadow: 2px 2px #666;
+  transform: translateY(4px);
+}
+
 .container {
   position: relative;
 }
@@ -363,6 +386,11 @@ h1 {
   .control-keys img {
     animation: pulse 1s linear infinite;
   }
+
+  .show-dialog .new-record {
+    font-size: 1rem;
+    margin: 0;
+  }
   
   .footer {
     padding: 1rem;
@@ -370,6 +398,14 @@ h1 {
 }
 
 @media screen and (max-width: 768px) {
+  h1 {
+    margin-bottom: 0;
+  }
+
+  .audio-switch-btn img {  
+    width: 1.2rem;
+  }
+
   .hud-container {
     justify-content: flex-end;
     flex-wrap: wrap;
@@ -390,7 +426,7 @@ h1 {
 
   .show-dialog {
     padding: 1rem;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     max-width: 100%;
     max-height: 95%;
   }
@@ -398,6 +434,14 @@ h1 {
   .show-dialog .dialog-heading {
     font-size: 1.8rem;
     margin: 0 0 1.5rem 0;
+  }
+
+  .restart-btn {
+    width: 2rem;
+  }
+
+  .creator-info {
+    flex-shrink: 1.7;
   }
 }
 

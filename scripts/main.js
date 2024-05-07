@@ -27,6 +27,7 @@ import { loadBgImage, loadImages } from './helpers.js';
 import { displayControls, displayDialog, hideDialog, populateControlsTip, populateMenu } from './menu.js';
 import {createSingleObstacle} from './obstacles.js'
 import { displayScore } from './score.js';
+import { loadAudio, loadedAudio, playAudio, stopAudio } from './sound.js';
 
 const loader = document.querySelector('.loader-wrapper');
 const canvas = document.querySelector('.playfield');
@@ -73,6 +74,10 @@ document.addEventListener('keyup', (e) => {
   }
 });
 
+startBtn.addEventListener('click', () => {
+  startGameFn();
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   for (let i = 0; i < maxObstaclesPerScreen; i++) {
     obstacleArray[i] = createSingleObstacle(obstacleArray, obstacleVelocity);
@@ -90,6 +95,7 @@ document.addEventListener('keydown', (e) => {
     sprite = 0;
     isRunning = false;
     isJumpPressed = true;
+    playAudio(loadedAudio.jump, false);
   }
 });
 
@@ -105,6 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
   loader.classList.add('show-loader');
   isLoading = true;
   loadImages()
+    .then(() => {
+      loadAudio();
+    })
     .then(() => {
       isIdle = true;
       loop();
@@ -125,16 +134,13 @@ document.addEventListener('keyup', (e) => {
   }
 });
 
-startBtn.addEventListener('click', () => {
-  startGameFn();
-});
-
 function startGameFn() {
   startBtn.classList.remove('show-start-btn');
   resetSettings();
   displayScore(scoreSpan, score);
   updateBestResult();
   displayControls();
+  playAudio(loadedAudio.click, false);
 }
 
 function restartGame() {
@@ -174,6 +180,7 @@ function resetSettings() {
   score = 0;
   isNewBest = false;
   deadAnimationplayed = false;
+  playAudio(loadedAudio.run, true);
 }
 
 function endGame(type) {
@@ -183,6 +190,12 @@ function endGame(type) {
   isJumpPressed = false;
   isIdle = false;
   updateBestResult();
+  stopAudio();
+  if (isNewBest) {
+    playAudio(loadedAudio.newRecord, false);
+  } else {
+    playAudio(loadedAudio.death, false);
+  }
   setTimeout(() => {
     populateMenu(type, bestScore, score, isNewBest);
     displayDialog();
@@ -190,10 +203,12 @@ function endGame(type) {
     const restartBtn = document.getElementById('restart-btn');
     restartBtn.addEventListener('click', () => {
       restartGame();
+      playAudio(loadedAudio.click, false);
     });
     document.addEventListener('keyup', (e) => {
       if ((e.code === 'Space' || e.key === 'Enter') && !startGame) {
         restartGame();
+        playAudio(loadedAudio.click, false);
       }
     });
   }, 300);
@@ -363,6 +378,7 @@ function updateScore() {
       updateBgVel();
       updateObstacleVel();
       scoreVel = initScoreVel * ((100 - (level * 10)) / 100);
+      playAudio(loadedAudio.newLevel, false);
     }
   }
 }

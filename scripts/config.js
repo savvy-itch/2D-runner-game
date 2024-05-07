@@ -1,3 +1,4 @@
+export const audioVolume = .1;
 const smallScreenWidth = window.innerWidth > 1024 ? 700 : window.innerWidth * .95;
 const smallScreenHeight = window.innerWidth > 1024 ? 400 : window.innerHeight * .5;
 export const canvasWidth = window.innerWidth > 1600 ? 900 : smallScreenWidth;
@@ -176,4 +177,12 @@ export const controlsTipHtml = {
       <img src="./images/spacebar2.png" alt="spacebar">
     </div>
   `
-} 
+}
+export const audioUrls = [
+  ['death', 'audio/fr_death-1.mp3'],
+  ['newLevel', 'audio/fr_new level-1.mp3'],
+  ['newRecord', 'audio/fr_new record-1.mp3'],
+  ['jump', 'audio/fr_jump.mp3'],
+  ['click', 'audio/fr_click.mp3'],
+  ['run', 'audio/fr_main.mp3']
+]

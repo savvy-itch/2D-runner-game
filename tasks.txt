@@ -18,7 +18,10 @@
     + handle max score 
   + best result
   ? collectables
-  ? sound FX + OST (similar to I Am Robot and Proud - The Electricity in Your House Wants to Sing)
+  + sound FX + OST (similar to I Am Robot and Proud - The Electricity in Your House Wants to Sing)
+    + death, new record, new level, button click, jump
+    + mute/unmute button
+    + in-game bg music
 3) Background:
   + obstacles:
     + display a static obstacle on the screen;
@@ -49,5 +52,3 @@
 Bugs:
 - Sometimes obstacles overlap each other
 - When background changes, there's a small gap between the images 
-+ bg doesn't reset on new game after death
-+ on mobile screen the footer doesn't fit on 100dvh
