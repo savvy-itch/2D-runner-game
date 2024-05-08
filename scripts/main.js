@@ -22,12 +22,15 @@ import {
   levelsEnv,
   maxScore,
   nextEnvScorePoint,
+  spriteXScaled,
+  spriteYScaled,
+  smallScreenCoefficient,
 } from './config.js';
 import { loadBgImage, loadImages } from './helpers.js';
 import { displayControls, displayDialog, hideDialog, populateControlsTip, populateMenu } from './menu.js';
 import {createSingleObstacle} from './obstacles.js'
 import { displayScore } from './score.js';
-import { loadAudio, loadedAudio, playAudio, stopAudio } from './sound.js';
+import { loadAudio, loadedAudio, playAudio, playTheme, stopTheme } from './sound.js';
 
 const loader = document.querySelector('.loader-wrapper');
 const canvas = document.querySelector('.playfield');
@@ -41,6 +44,7 @@ const ctx = canvas.getContext('2d');
 ctx.fillStyle = 'beige';
 ctx.fillRect(0, 0, width, height);
 ctx.translate(0, -height * 0.3);
+console.log({canvasWidth, canvasHeight})
 
 let isLoading = false;
 let startGame = false; 
@@ -60,13 +64,13 @@ let posY = 0;
 let loopId;
 
 const imageRun = new Image();
-imageRun.src = "images/character/Run.png";
+imageRun.src = "images/character/Run.webp";
 const imageIdle = new Image();
-imageIdle.src = "images/character/Idle.png";
+imageIdle.src = "images/character/Idle.webp";
 const imageJump = new Image();
-imageJump.src = "images/character/Jump.png";
+imageJump.src = "images/character/Jump.webp";
 const imageDead = new Image();
-imageDead.src = "images/character/Dead.png";
+imageDead.src = "images/character/Dead.webp";
 
 document.addEventListener('keyup', (e) => {
   if (e.key === 'Enter' && !startGame && !isRestart) {
@@ -95,12 +99,12 @@ document.addEventListener('keydown', (e) => {
     sprite = 0;
     isRunning = false;
     isJumpPressed = true;
-    playAudio(loadedAudio.jump, false);
+    playAudio(loadedAudio.jump);
   }
 });
 
-document.addEventListener('touchstart', () => {
-  if (startGame && !isJumpPressed) {
+document.addEventListener('touchstart', (e) => {
+  if (e.target.classList.contains('playfield') && startGame && !isJumpPressed) {
     sprite = 0;
     isRunning = false;
     isJumpPressed = true;
@@ -140,7 +144,7 @@ function startGameFn() {
   displayScore(scoreSpan, score);
   updateBestResult();
   displayControls();
-  playAudio(loadedAudio.click, false);
+  playAudio(loadedAudio.click);
 }
 
 function restartGame() {
@@ -180,7 +184,7 @@ function resetSettings() {
   score = 0;
   isNewBest = false;
   deadAnimationplayed = false;
-  playAudio(loadedAudio.run, true);
+  playTheme();
 }
 
 function endGame(type) {
@@ -190,11 +194,11 @@ function endGame(type) {
   isJumpPressed = false;
   isIdle = false;
   updateBestResult();
-  stopAudio();
+  stopTheme();
   if (isNewBest) {
-    playAudio(loadedAudio.newRecord, false);
+    playAudio(loadedAudio.newRecord);
   } else {
-    playAudio(loadedAudio.death, false);
+    playAudio(loadedAudio.death);
   }
   setTimeout(() => {
     populateMenu(type, bestScore, score, isNewBest);
@@ -203,12 +207,12 @@ function endGame(type) {
     const restartBtn = document.getElementById('restart-btn');
     restartBtn.addEventListener('click', () => {
       restartGame();
-      playAudio(loadedAudio.click, false);
+      playAudio(loadedAudio.click);
     });
     document.addEventListener('keyup', (e) => {
       if ((e.code === 'Space' || e.key === 'Enter') && !startGame) {
         restartGame();
-        playAudio(loadedAudio.click, false);
+        playAudio(loadedAudio.click);
       }
     });
   }, 300);
@@ -231,10 +235,9 @@ class Hero {
       spriteYNoPadding, // the size of the slice to cut out (Y)
       this.x, // top-left corner of canvas box into which to draw the slice (X)
       this.y, // top-left corner of canvas box into which to draw the slice (Y)
-      spriteXNoPadding, // the size of the image on the canvas (X)
-      spriteYNoPadding // the size of the image on the canvas (Y)
+      spriteXScaled, // the size of the image on the canvas (X)
+      spriteYScaled // the size of the image on the canvas (Y)
     );
-    // ctx.strokeRect(this.x, this.y, spriteXNoPadding, spriteYNoPadding);
 
   slowFramerate(idleVelocity, 4);
 
@@ -250,10 +253,9 @@ class Hero {
       spriteYNoPadding, // the size of the slice to cut out (Y)
       this.x, // top-left corner of canvas box into which to draw the slice (X)
       this.y, // top-left corner of canvas box into which to draw the slice (Y)
-      spriteXNoPadding, // the size of the image on the canvas (X)
-      spriteYNoPadding // the size of the image on the canvas (Y)
+      Math.round(spriteXNoPadding * smallScreenCoefficient), // the size of the image on the canvas (X)
+      Math.round(spriteYNoPadding * smallScreenCoefficient) // the size of the image on the canvas (Y)
     );
-    // ctx.strokeRect(this.x, this.y, spriteXNoPadding, spriteYNoPadding);
   
     slowFramerate(velocity, runSprites);
   
@@ -269,10 +271,9 @@ class Hero {
       spriteYNoPadding, // the size of the slice to cut out (Y)
       this.x, // top-left corner of canvas box into which to draw the slice (X)
       this.y - posY, // top-left corner of canvas box into which to draw the slice (Y)
-      spriteXNoPadding, // the size of the image on the canvas (X)
-      spriteYNoPadding // the size of the image on the canvas (Y)
+      Math.round(spriteXNoPadding * smallScreenCoefficient), // the size of the image on the canvas (X)
+      Math.round(spriteYNoPadding * smallScreenCoefficient) // the size of the image on the canvas (Y)
     );
-    // ctx.strokeRect(this.x, this.y - posY, spriteXNoPadding, spriteYNoPadding);
     
     slowFramerate(4, jumpSprites);
   
@@ -303,10 +304,9 @@ class Hero {
       spriteYNoPadding, // the size of the slice to cut out (Y)
       0, // top-left corner of canvas box into which to draw the slice (X)
       this.y - posY, // top-left corner of canvas box into which to draw the slice (Y)
-      spriteDeadXNoPadding, // the size of the image on the canvas (X)
-      spriteYNoPadding // the size of the image on the canvas (Y)
+      Math.round(spriteDeadXNoPadding * smallScreenCoefficient), // the size of the image on the canvas (X)
+      Math.round(spriteYNoPadding * smallScreenCoefficient) // the size of the image on the canvas (Y)
     );
-    // ctx.strokeRect(0, this.y - posY, spriteDeadXNoPadding, spriteYNoPadding);
 
     // if animation has finished
     if (sprite >= deadSprites) {
@@ -318,16 +318,16 @@ class Hero {
   }
 
   detectCollision(obstacleX, obstacleY) {
-    if (obstacleX <= (this.x + spriteXNoPadding) 
+    if (obstacleX <= (this.x + (spriteXNoPadding * smallScreenCoefficient)) 
       && obstacleX >= this.x
-      && obstacleY <= (this.y - posY + spriteYNoPadding)) {
+      && obstacleY <= (this.y - posY + (spriteYNoPadding * smallScreenCoefficient))) {
         return true;
     }
     return false;
   }
 }
 
-const hero = new Hero(25, height - spriteYNoPadding);
+const hero = new Hero(25, height - (spriteYNoPadding * smallScreenCoefficient));
 
 function slowFramerate(velocity, numOfSprites) {
   if (frame % velocity === 0) {
@@ -378,7 +378,7 @@ function updateScore() {
       updateBgVel();
       updateObstacleVel();
       scoreVel = initScoreVel * ((100 - (level * 10)) / 100);
-      playAudio(loadedAudio.newLevel, false);
+      playAudio(loadedAudio.newLevel);
     }
   }
 }

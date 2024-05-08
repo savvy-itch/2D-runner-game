@@ -4,6 +4,7 @@ import {
   minDistanceBetweenObstacles,
   canvasWidth,
   canvasHeight,
+  smallScreenCoefficient,
 } from './config.js';
 import {getRandom} from './helpers.js';
 
@@ -28,8 +29,8 @@ export class Obstacle {
       this.sizeY, // the size of the slice to cut out (Y)
       this.x, // top-left corner of canvas box into which to draw the slice (X)
       this.y, // top-left corner of canvas box into which to draw the slice (Y)
-      this.sizeX, // the size of the image on the canvas (X)
-      this.sizeY // the size of the image on the canvas (Y)
+      Math.round(this.sizeX * smallScreenCoefficient), // the size of the image on the canvas (X)
+      Math.round(this.sizeY * smallScreenCoefficient) // the size of the image on the canvas (Y)
     );
   }
 
@@ -70,7 +71,7 @@ export function createSingleObstacle(obstacleArray, obstacleVelocity) {
   obstacleObj.isPassed = false;
   obstacleObj.isVisible = false;
   obstacleObj.x = distance;
-  obstacleObj.y = canvasHeight - obstacles[idx].sizeY;
+  obstacleObj.y = canvasHeight - (obstacles[idx].sizeY * smallScreenCoefficient);
   const obstacle = new Obstacle(obstacleObj.isPassed, obstacleObj.isVisible, obstacleImg, obstacleObj.x, obstacleObj.y, obstacles[idx].sizeX, obstacles[idx].sizeY, obstacleVelocity);
   return obstacle;
 }

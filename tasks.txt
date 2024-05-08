@@ -22,6 +22,7 @@
     + death, new record, new level, button click, jump
     + mute/unmute button
     + in-game bg music
+    + load main theme lazily
 3) Background:
   + obstacles:
     + display a static obstacle on the screen;
@@ -52,3 +53,4 @@
 Bugs:
 - Sometimes obstacles overlap each other
 - When background changes, there's a small gap between the images 
++ when pressing audio switch btn mid game, the character jumps

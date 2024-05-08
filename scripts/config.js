@@ -1,8 +1,9 @@
-export const audioVolume = .1;
+export const audioVolume = .3;
 const smallScreenWidth = window.innerWidth > 1024 ? 700 : window.innerWidth * .95;
-const smallScreenHeight = window.innerWidth > 1024 ? 400 : window.innerHeight * .5;
+const smallScreenHeight = window.innerWidth > 1024 ? 400 : window.innerHeight * .4;
 export const canvasWidth = window.innerWidth > 1600 ? 900 : smallScreenWidth;
 export const canvasHeight = window.innerWidth > 1600 ? 500 : smallScreenHeight;
+export const smallScreenCoefficient = window.innerWidth > 1024 ? 1 : .75;
 export const deadSprites = 4;
 export const deadVel = 10;
 export const idleVelocity = 13;
@@ -16,12 +17,14 @@ export const scoreCharsAmount = 5;
 export const maxScore = Number(String('').padStart(scoreCharsAmount, '9'));
 export const minDistanceBetweenObstacles = 50;
 export const nextEnvScorePoint = 400;
-export const offsetPerFrame = 60;
+export const offsetPerFrame = window.innerWidth > 1024 ? 60 : 40;
 export const runSprites = 7;
 export const spriteX = 128;
 export const spriteY = 128;
 export const spriteXNoPadding = 54;
 export const spriteYNoPadding = 75;
+export const spriteXScaled = window.innerWidth > 1024 ? spriteXNoPadding : Math.round(spriteXNoPadding * smallScreenCoefficient);
+export const spriteYScaled = window.innerWidth > 1024 ? spriteYNoPadding : Math.round(spriteYNoPadding * smallScreenCoefficient);
 export const spriteDeadXNoPadding = 76;
 export const spriteXPadding = (spriteX - spriteXNoPadding) / 2;
 export const spriteDeadXPadding = (spriteX - spriteDeadXNoPadding) / 2;
@@ -146,20 +149,20 @@ export const menuHtml = {
 export const levelsEnv = [
   {
     level: 1,
-    skyBg: "images/env/1/1.png",
-    groundBg: "images/env/1/ground.png",
-    skyBgObj: "images/env/1/4.png",
-    groundBgObj: "images/env/1/3.png"
+    skyBg: "images/env/sky.webp",
+    groundBg: "images/env/ground.webp",
+    skyBgObj: "images/env/clouds.webp",
+    groundBgObj: "images/env/foreground.webp"
   },
   {
     level: 2,
-    skyBg: "images/env/1/dusk_sky.png",
-    groundBg: "images/env/1/dusk_ground.png",
+    skyBg: "images/env/dusk_sky.webp",
+    groundBg: "images/env/dusk_ground.webp",
   },
   {
     level: 3,
-    skyBg: "images/env/1/night_sky.png",
-    groundBg: "images/env/1/night_ground.png",
+    skyBg: "images/env/night_sky.webp",
+    groundBg: "images/env/night_ground.webp",
   },
 ];
 export const controlsTipHtml = {
@@ -184,5 +187,4 @@ export const audioUrls = [
   ['newRecord', 'audio/fr_new record-1.mp3'],
   ['jump', 'audio/fr_jump.mp3'],
   ['click', 'audio/fr_click.mp3'],
-  ['run', 'audio/fr_main.mp3']
 ]

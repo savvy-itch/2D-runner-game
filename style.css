@@ -31,10 +31,21 @@ body {
   padding: 0 4rem;
 }
 
+.header-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+  margin-top: 1rem;
+}
+
 h1 {
   font-family: "Poetsen One", sans-serif;
+  font-display: optional;
   font-size: 3rem;
-  margin: 2rem 0;
+  justify-self: center;
+  grid-column-end: 3;
 }
 
 .audio-switch-btn {
@@ -44,9 +55,11 @@ h1 {
   border: 2px solid var(--border-color);
   background-color: var(--dialog-bg);
   box-shadow: 2px 3px #999;
+  justify-self: end;
 
   img {
     width: 1.7rem;
+    height: 1.7rem;
   }
 }
 
@@ -62,6 +75,8 @@ h1 {
 
 .container {
   position: relative;
+  width: 900px;
+  height: 500px;
 }
 
 .container * {
@@ -198,13 +213,17 @@ h1 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 100px;
   background-color: var(--start-btn-color);
   border-radius: 50%;
   border: none;
   display: flex;
   align-items: center;
   transition: background-color var(--transition);
+}
+
+.start-btn img {
+  width: 100px;
+  height: 100px;
 }
 
 .start-btn:hover,
@@ -219,15 +238,9 @@ h1 {
 .restart-btn:active,
 .restart-btn:active {
   background-color: var(--start-btn-active);
-} 
-
-.start-btn img,
-.restart-btn img {
-  max-width: 100%;
 }
 
 .restart-btn {
-  width: 4rem;
   margin: 0 auto;
   border: none;
   border-radius: 50%;
@@ -236,6 +249,11 @@ h1 {
   justify-content: center;
   align-items: center;
   transition: background-color var(--transition);
+}
+
+.restart-btn img {
+  width: 4rem;
+  height: 4rem;
 }
 
 .new-record {
@@ -366,14 +384,26 @@ h1 {
   }
 }
 
+@media screen and (max-width: 1600px) {
+  .container {
+    width: 700px;
+    height: 400px;
+  }
+}
+
 @media screen and (max-width: 1024px) {
   body {
     padding: 0 1rem;
   }
 
   h1 {
-    margin: 1rem 0;
+    /* margin: 1rem 0; */
     font-size: 2rem;
+  }
+
+  .container {
+    width: calc(100vw * .95);
+    height: calc(100dvh * .5);
   }
 
   .show-controls-tip {
@@ -404,6 +434,7 @@ h1 {
 
   .audio-switch-btn img {  
     width: 1.2rem;
+    height: 1.2rem;
   }
 
   .hud-container {
@@ -411,12 +442,8 @@ h1 {
     flex-wrap: wrap;
   }
 
-  .footer {
-    font-size: .6rem;
-
-    h2 {
-      font-size: 1rem;
-    }
+  .show-start-btn {
+    top: 40%;
   }
 
   .svg-icon {
@@ -428,16 +455,26 @@ h1 {
     padding: 1rem;
     font-size: 1.4rem;
     max-width: 100%;
+    min-width: 95%;
     max-height: 95%;
+    top: 40%;
   }
 
   .show-dialog .dialog-heading {
     font-size: 1.8rem;
-    margin: 0 0 1.5rem 0;
+    margin: 0 0 1rem 0;
   }
 
   .restart-btn {
     width: 2rem;
+  }
+
+  .footer {
+    font-size: .6rem;
+
+    h2 {
+      font-size: 1rem;
+    }
   }
 
   .creator-info {
