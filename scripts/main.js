@@ -33,6 +33,7 @@ import { displayScore } from './score.js';
 import { loadAudio, loadedAudio, playAudio, playTheme, stopTheme } from './sound.js';
 
 const loader = document.querySelector('.loader-wrapper');
+const container = document.querySelector('.container');
 const canvas = document.querySelector('.playfield');
 const bestScoreSpan = document.getElementById('best');
 const scoreSpan = document.getElementById('score');
@@ -44,7 +45,6 @@ const ctx = canvas.getContext('2d');
 ctx.fillStyle = 'beige';
 ctx.fillRect(0, 0, width, height);
 ctx.translate(0, -height * 0.3);
-console.log({canvasWidth, canvasHeight})
 
 let isLoading = false;
 let startGame = false; 

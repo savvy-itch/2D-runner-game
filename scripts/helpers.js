@@ -29,7 +29,7 @@ export function loadImages() {
     };
 
     for (let i = 0; i < levelsEnv.length; i++) {
-      loadImage(levelsEnv[i].skyBg);
+      loadImage(window.innerWidth > 500 ? levelsEnv[i].skyBg.lg : levelsEnv[i].skyBg.sm);
       loadImage(levelsEnv[0].skyBgObj);
       loadImage(levelsEnv[i].groundBg);
       loadImage(levelsEnv[0].groundBgObj);
@@ -43,7 +43,7 @@ export function loadImages() {
 
 export function loadBgImage(bgElem, env) {
   const skyBg = new Image();
-  skyBg.src = levelsEnv[env].skyBg;
+  skyBg.src = window.innerWidth > 500 ? levelsEnv[env].skyBg.lg : levelsEnv[env].skyBg.sm;
   bgElem.skyBg = skyBg;
   const groundBg = new Image();
   groundBg.src = levelsEnv[env].groundBg;

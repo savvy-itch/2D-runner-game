@@ -130,12 +130,13 @@ h1 {
   -webkit-box-shadow: 0px 13px 22px 5px rgba(0,0,0,0.75);
   -moz-box-shadow: 0px 13px 22px 5px rgba(0,0,0,0.75);
   box-shadow: 0px 13px 22px 5px rgba(0,0,0,0.75);
+  width: 900px;
+  height: 500px;
 }
 
 .hud-container {
   --font-size: 1.5rem;
 
-  /* max-width: 50%; */
   position: absolute;
   right: 5%;
   top: 15px;
@@ -389,6 +390,10 @@ h1 {
     width: 700px;
     height: 400px;
   }
+  .playfield {
+    width: 700px;
+    height: 400px;
+  }
 }
 
 @media screen and (max-width: 1024px) {
@@ -397,13 +402,17 @@ h1 {
   }
 
   h1 {
-    /* margin: 1rem 0; */
     font-size: 2rem;
   }
 
   .container {
     width: calc(100vw * .95);
-    height: calc(100dvh * .5);
+    height: calc(100dvh * .4);
+  }
+
+  .playfield {
+    width: calc(100vw * .95);
+    height: calc(100dvh * .4);
   }
 
   .show-controls-tip {
@@ -442,9 +451,10 @@ h1 {
     flex-wrap: wrap;
   }
 
-  .show-start-btn {
+  /* .show-start-btn,
+  .show-loader {
     top: 40%;
-  }
+  } */
 
   .svg-icon {
     width: 16px; 

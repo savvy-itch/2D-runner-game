@@ -49,7 +49,7 @@ export class Background {
 
 export function createBgElement(env, i, backgroundVel, foregroundVel) {
   const skyBg = new Image();
-  skyBg.src = levelsEnv[env].skyBg;
+  skyBg.src = window.innerWidth > 500 ? levelsEnv[env].skyBg.lg : levelsEnv[env].skyBg.sm;
   const groundBg = new Image();
   groundBg.src = levelsEnv[env].groundBg;
   const skyBgObj = new Image();

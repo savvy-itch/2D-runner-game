@@ -44,8 +44,8 @@
   + display different tips depending on device screen width
 + Loading spinner before images are loaded
 9) Optimize images
-  - compress images
-  - serve images in correct sizes
+  + compress images
+  + serve images in correct sizes
 + footer
 + favicon
 + add mobile controls

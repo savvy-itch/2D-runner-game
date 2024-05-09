@@ -149,19 +149,28 @@ export const menuHtml = {
 export const levelsEnv = [
   {
     level: 1,
-    skyBg: "images/env/sky.webp",
+    skyBg: {
+      lg: "images/env/sky.webp",
+      sm: "images/env/sky_500x281.webp"
+    },
     groundBg: "images/env/ground.webp",
     skyBgObj: "images/env/clouds.webp",
     groundBgObj: "images/env/foreground.webp"
   },
   {
     level: 2,
-    skyBg: "images/env/dusk_sky.webp",
+    skyBg: {
+      lg: "images/env/dusk_sky.webp",
+      sm: "images/env/dusk_sky_500x281.webp"
+    },
     groundBg: "images/env/dusk_ground.webp",
   },
   {
     level: 3,
-    skyBg: "images/env/night_sky.webp",
+    skyBg: {
+      lg: "images/env/night_sky.webp",
+      sm: "images/env/night_sky_500x281.webp"
+    },
     groundBg: "images/env/night_ground.webp",
   },
 ];
