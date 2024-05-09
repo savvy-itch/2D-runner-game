@@ -450,11 +450,6 @@ h1 {
     flex-wrap: wrap;
   }
 
-  /* .show-start-btn,
-  .show-loader {
-    top: 40%;
-  } */
-
   .svg-icon {
     width: 16px; 
     height: 16px;
@@ -466,7 +461,6 @@ h1 {
     max-width: 100%;
     min-width: 95%;
     max-height: 95%;
-    top: 40%;
   }
 
   .show-dialog .dialog-heading {
@@ -474,8 +468,9 @@ h1 {
     margin: 0 0 1rem 0;
   }
 
-  .restart-btn {
-    width: 2rem;
+  .restart-btn img {
+    width: 2.5rem;
+    height: 2.5rem;
   }
 
   .footer {
