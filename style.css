@@ -33,7 +33,7 @@ body {
 
 .header-container {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 1fr 3fr 1fr;
   gap: 1rem;
   align-items: center;
   width: 100%;
@@ -42,7 +42,6 @@ body {
 
 h1 {
   font-family: "Poetsen One", sans-serif;
-  font-display: optional;
   font-size: 3rem;
   justify-self: center;
   grid-column-end: 3;

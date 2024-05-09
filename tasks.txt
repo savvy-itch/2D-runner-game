@@ -53,4 +53,3 @@
 Bugs:
 - Sometimes obstacles overlap each other
 - When background changes, there's a small gap between the images 
-+ when pressing audio switch btn mid game, the character jumps
