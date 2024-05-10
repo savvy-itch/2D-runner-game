@@ -26,7 +26,7 @@ export class Background {
       img, 
       this.backgroundX, // top-left corner of the slice to cut out (X)
       0, // top-left corner of the slice to cut out (Y)
-      canvasWidth,
+      canvasWidth + 8, // images overlap each other to ensure no gaps appear in between
       canvasHeight * 1.3
     );
   }

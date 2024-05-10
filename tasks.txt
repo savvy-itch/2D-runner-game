@@ -52,4 +52,6 @@
 
 Bugs:
 - Sometimes obstacles overlap each other
-- When background changes, there's a small gap between the images 
++ When background changes, there's a small gap between the images 
++ decrease velocity on small screens
++ save sound preferences in session storage

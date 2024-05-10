@@ -4,9 +4,16 @@ const switchBtn = document.getElementById('audio-switch-btn');
 const audioCtx = new AudioContext();
 const gainNode = audioCtx.createGain();
 const mainThemeElem = document.querySelector('audio');
-mainThemeElem.volume = audioVolume;
+let volumePreference = Number(sessionStorage.getItem('volumePreference')) ?? audioVolume;
+mainThemeElem.volume = volumePreference;
 mainThemeElem.loop = true;
-gainNode.gain.value = audioVolume;
+gainNode.gain.value = volumePreference;
+
+if (volumePreference === 0) {
+  switchBtn.innerHTML = `
+    <img src="./images/sound-off.svg" alt="audio switch">
+  `;
+}
 
 switchBtn.addEventListener('click', switchAudio);
 
@@ -64,4 +71,6 @@ export function switchAudio() {
     `;
     switchBtn.setAttribute('aria-checked', 'false');
   }
+  sessionStorage.removeItem('volumePreference');
+  sessionStorage.setItem('volumePreference', gainNode.gain.value);
 }

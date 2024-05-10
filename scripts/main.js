@@ -25,6 +25,7 @@ import {
   spriteXScaled,
   spriteYScaled,
   smallScreenCoefficient,
+  initialObstacleVel,
 } from './config.js';
 import { loadBgImage, loadImages } from './helpers.js';
 import { displayControls, displayDialog, hideDialog, populateControlsTip, populateMenu } from './menu.js';
@@ -55,6 +56,7 @@ let isDead = false;
 let sprite = 0;
 let frame = 0;
 let velocity = 5;
+let obstacleVelocity = initialObstacleVel;
 let deadAnimationplayed = false;
 let score = 0;
 let bestScore = 0;
@@ -157,7 +159,7 @@ function restartGame() {
   backgroundVel = initialBackgroundVel;
   foregroundVel = initialForegroundVel;
   obstacleArray = Array.from({length: maxObstaclesPerScreen});
-  obstacleVelocity = 6;
+  obstacleVelocity = initialObstacleVel;
   scoreFreq = 0;
   scoreVel = initScoreVel;
   level = 1;
@@ -354,7 +356,6 @@ function updateBestResult() {
 }
 
 let obstacleArray = Array.from({length: maxObstaclesPerScreen});
-let obstacleVelocity = 6;
 let scoreFreq = 0;
 let scoreVel = initScoreVel;
 let level = 1;

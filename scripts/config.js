@@ -7,6 +7,7 @@ export const smallScreenCoefficient = window.innerWidth > 1024 ? 1 : .75;
 export const deadSprites = 4;
 export const deadVel = 10;
 export const idleVelocity = 13;
+export const initialObstacleVel = window.innerWidth > 1024 ? 6 : 3;
 export const initialBackgroundVel = 1;
 export const initialForegroundVel = 2;
 export const initScoreVel = 20;
