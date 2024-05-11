@@ -1,6 +1,6 @@
 # Fairy Run
 
-Fairy Run is a browser 2d runner game similar to Google Chrome's dino game. Check the live version [here](https://savvy-itch.github.io/2D-runner-game/).
+Fairy Run is a browser 2d runner game similar to Google Chrome's dino game. Check the live version [here](https://savvy-itch.github.io/fairy-run/).
 
 <img width="500px" src="https://i.ibb.co/0Gf5GLZ/Screenshot-6.jpg" alt="in-game screenshot" />
 

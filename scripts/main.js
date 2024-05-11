@@ -133,13 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-document.addEventListener('keyup', (e) => {
-  if (e.code === 'Escape') {
-    console.log('abort');
-    endGame('gameOver');
-  }
-});
-
 function startGameFn() {
   startBtn.classList.remove('show-start-btn');
   resetSettings();
