@@ -72,6 +72,15 @@ export function createSingleObstacle(obstacleArray, obstacleVelocity) {
   obstacleObj.isVisible = false;
   obstacleObj.x = distance;
   obstacleObj.y = canvasHeight - (obstacles[idx].sizeY * smallScreenCoefficient);
-  const obstacle = new Obstacle(obstacleObj.isPassed, obstacleObj.isVisible, obstacleImg, obstacleObj.x, obstacleObj.y, obstacles[idx].sizeX, obstacles[idx].sizeY, obstacleVelocity);
+  const obstacle = new Obstacle(
+    obstacleObj.isPassed, 
+    obstacleObj.isVisible, 
+    obstacleImg, 
+    obstacleObj.x, 
+    obstacleObj.y, 
+    obstacles[idx].sizeX, 
+    obstacles[idx].sizeY, 
+    obstacleVelocity
+  );
   return obstacle;
 }

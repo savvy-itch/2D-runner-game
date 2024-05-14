@@ -26,6 +26,11 @@ import {
   spriteYScaled,
   smallScreenCoefficient,
   initialObstacleVel,
+  idleSpriteXNoPadding,
+  idleXScaled,
+  idleXPadding,
+  jumpSpriteXNoPadding,
+  jumpXPadding,
 } from './config.js';
 import { loadBgImage, loadImages } from './helpers.js';
 import { displayControls, displayDialog, hideDialog, populateControlsTip, populateMenu } from './menu.js';
@@ -57,7 +62,7 @@ let sprite = 0;
 let frame = 0;
 let velocity = 5;
 let obstacleVelocity = initialObstacleVel;
-let deadAnimationplayed = false;
+let deadAnimationPlaying = false;
 let score = 0;
 let bestScore = 0;
 let isNewBest = false;
@@ -150,7 +155,7 @@ function restartGame() {
     loadBgImage(bgArray[i], env);
   }
   backgroundVel = initialBackgroundVel;
-  foregroundVel = initialForegroundVel;
+  foregroundVel = initialObstacleVel;
   obstacleArray = Array.from({length: maxObstaclesPerScreen});
   obstacleVelocity = initialObstacleVel;
   scoreFreq = 0;
@@ -178,7 +183,8 @@ function resetSettings() {
   isDead = false;
   score = 0;
   isNewBest = false;
-  deadAnimationplayed = false;
+  deadAnimationPlaying = false;
+  updateBgVel();
   playTheme();
 }
 
@@ -197,7 +203,9 @@ function endGame(type) {
   }
   setTimeout(() => {
     populateMenu(type, bestScore, score, isNewBest);
-    displayDialog();
+    if (!startGame) {
+      displayDialog();
+    }
     isRestart = true;
     const restartBtn = document.getElementById('restart-btn');
     restartBtn.addEventListener('click', () => {
@@ -224,19 +232,18 @@ class Hero {
   drawIdle() {
     ctx.drawImage(
       imageIdle, 
-      (sprite * spriteX) + spriteXPadding, // top-left corner of the slice to cut out (X)
+      (sprite * spriteX) + idleXPadding, // top-left corner of the slice to cut out (X)
       0, // top-left corner of the slice to cut out (Y)
-      spriteXNoPadding, // the size of the slice to cut out (X)
+      idleSpriteXNoPadding, // the size of the slice to cut out (X)
       spriteYNoPadding, // the size of the slice to cut out (Y)
       this.x, // top-left corner of canvas box into which to draw the slice (X)
       this.y, // top-left corner of canvas box into which to draw the slice (Y)
-      spriteXScaled, // the size of the image on the canvas (X)
+      idleXScaled, // the size of the image on the canvas (X)
       spriteYScaled // the size of the image on the canvas (Y)
     );
 
-  slowFramerate(idleVelocity, 4);
-
-  frame++;
+    slowFramerate(idleVelocity, 4);
+    frame++;
   }
 
   drawRun() {
@@ -248,8 +255,8 @@ class Hero {
       spriteYNoPadding, // the size of the slice to cut out (Y)
       this.x, // top-left corner of canvas box into which to draw the slice (X)
       this.y, // top-left corner of canvas box into which to draw the slice (Y)
-      Math.round(spriteXNoPadding * smallScreenCoefficient), // the size of the image on the canvas (X)
-      Math.round(spriteYNoPadding * smallScreenCoefficient) // the size of the image on the canvas (Y)
+      spriteXScaled, // the size of the image on the canvas (X)
+      spriteYScaled // the size of the image on the canvas (Y)
     );
   
     slowFramerate(velocity, runSprites);
@@ -260,14 +267,14 @@ class Hero {
   drawJump() {
     ctx.drawImage(
       imageJump,
-      (sprite * spriteX) + spriteXPadding, // top-left corner of the slice to cut out (X)
+      (sprite * spriteX) + jumpXPadding, // top-left corner of the slice to cut out (X)
       spriteY - spriteYNoPadding, // top-left corner of the slice to cut out (Y)
-      spriteXNoPadding, // the size of the slice to cut out (X)
+      jumpSpriteXNoPadding, // the size of the slice to cut out (X)
       spriteYNoPadding, // the size of the slice to cut out (Y)
       this.x, // top-left corner of canvas box into which to draw the slice (X)
       this.y - posY, // top-left corner of canvas box into which to draw the slice (Y)
-      Math.round(spriteXNoPadding * smallScreenCoefficient), // the size of the image on the canvas (X)
-      Math.round(spriteYNoPadding * smallScreenCoefficient) // the size of the image on the canvas (Y)
+      Math.round(jumpSpriteXNoPadding * smallScreenCoefficient), // the size of the image on the canvas (X)
+      spriteYScaled // the size of the image on the canvas (Y)
     );
     
     slowFramerate(4, jumpSprites);
@@ -300,12 +307,12 @@ class Hero {
       0, // top-left corner of canvas box into which to draw the slice (X)
       this.y - posY, // top-left corner of canvas box into which to draw the slice (Y)
       Math.round(spriteDeadXNoPadding * smallScreenCoefficient), // the size of the image on the canvas (X)
-      Math.round(spriteYNoPadding * smallScreenCoefficient) // the size of the image on the canvas (Y)
+      spriteYScaled // the size of the image on the canvas (Y)
     );
 
     // if animation has finished
     if (sprite >= deadSprites) {
-      deadAnimationplayed = true;
+      deadAnimationPlaying = true;
     } else {
       slowFramerate(velocity, deadSprites);
       frame++;
@@ -368,7 +375,7 @@ function updateScore() {
       level++;
       obstacleVelocity += .9;
       backgroundVel += .5;
-      foregroundVel += .5;
+      foregroundVel += .9;
       updateBgVel();
       updateObstacleVel();
       scoreVel = initScoreVel * ((100 - (level * 10)) / 100);
@@ -458,7 +465,7 @@ function loop() {
     }
   }
 
-  if (isDead && startGame && !deadAnimationplayed) {
+  if (isDead && startGame && !deadAnimationPlaying) {
     hero.drawDead();
   } else if (isRunning) {
     hero.drawRun();
@@ -469,7 +476,7 @@ function loop() {
   }
 
   loopId = window.requestAnimationFrame(loop);
-  if (deadAnimationplayed) {
+  if (deadAnimationPlaying) {
     endGame('gameOver');
   }
 }

@@ -52,3 +52,7 @@
 
 Bugs:
 - Sometimes obstacles overlap each other
++ Wide hitboxes (don't move to left when dying)
++ hitting spacebar while dying breaks the game
++ speed up foreground objects according to obstacles
++ obstacles move slower than foreground (get to lvl 2 -> die -> restart) and evens out only after reaching a new level;
